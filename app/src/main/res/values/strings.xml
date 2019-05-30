@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">AdilService</string>
+
+    <string name="sort_all">All</string>
+    <string name="sort_a_z">A-Z</string>
+    <string name="sort_tp">TP</string>
+    <string name="sort_network">NetWork Id</string>
+    <string name="sort_sort">Sort</string>
+    <string name="sort_sort_text">i</string>
+    <string name="f1_key">F1</string>
+    <string name="f2_key">F2</string>
+    <string name="f3_key">F3</string>
+    <string name="f4_key">F4</string>
+    <string name="f1_find">Find</string>
+    <string name="f2_add_fav">Add To Fav</string>
+    <string name="f3_satellite">Satellite</string>
+    <string name="f4_favourite_list">Favourite List</string>
+    <string name="favourite_list">Favourite List</string>
+    <string name="channel_list_all">ALL TV</string>
+</resources>

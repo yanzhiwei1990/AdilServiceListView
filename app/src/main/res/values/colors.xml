@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="half_transparent">#7F000000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="blue">#0000FF</color>
+    <color name="gray">#C0C0C0</color>
+    <color name="dark_gray">#37474F</color>
+    <color name="function_text_color">#008080</color>
+    <color name="button_selected">#C0C0C0</color>
+    <color name="button_unselected">#37474F</color>
+    <color name="button_pressed">#37474F</color>
+    <color name="item_selected">#008080</color>
+    <color name="item_channel_unselected">#37474F</color>
+    <color name="item_fav_unselected">#000000</color>
+    <color name="item_focused">#C0C0C0</color>
+    <color name="item_normal">#000000</color>
+    <color name="item_pressed">#37474F</color>
+    <color name="divider">#FFFFFF</color>
+</resources>
