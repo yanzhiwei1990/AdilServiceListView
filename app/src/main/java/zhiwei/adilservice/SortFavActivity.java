@@ -32,10 +32,10 @@ public class SortFavActivity extends Activity {
     private static final String LOGD = "logd";
     private static final String LOGE = "loge";
 
-    private ListView mAllListView;
-    private ListView mSortListView;
-    private ListView mContentListView;
-    private ListView mFavListView;
+    private ChannelListListView mAllListView;
+    private ChannelListListView mSortListView;
+    private ChannelListListView mContentListView;
+    private FavListListView mFavListView;
 
     private TextView mLeftTitle;
     private TextView mRightTitle;
@@ -135,10 +135,10 @@ public class SortFavActivity extends Activity {
         mSatelliteButton = (Button)findViewById(R.id.f3_button);
         mFavListButton = (Button)findViewById(R.id.f4_button);
 
-        mSortListView = (ListView) findViewById(R.id.sort_key);
-        mContentListView = (ListView)findViewById(R.id.sort_channel);
-        mAllListView = (ListView)findViewById(R.id.sort_channel_all);
-        mFavListView = (ListView)findViewById(R.id.favourite);
+        mSortListView = (ChannelListListView) findViewById(R.id.sort_key);
+        mContentListView = (ChannelListListView)findViewById(R.id.sort_channel);
+        mAllListView = (ChannelListListView)findViewById(R.id.sort_channel_all);
+        mFavListView = (FavListListView) findViewById(R.id.favourite);
         ItemAdapter adapter = null;
         adapter = new ItemAdapter(mChannelDataManager.getChannelListItem("adtv"), this);
         mAllListView.setAdapter(adapter);
@@ -226,6 +226,15 @@ public class SortFavActivity extends Activity {
                         break;
                     case R.id.sort_channel_all:
                         LOG(LOGD, null, "onItemClick sort_channel position = " + position + ", id = " + id);
+                        LOG(LOGD, null, "onItemClick parent = " + parent + ", view = " + view);
+                        if (parent instanceof ChannelListListView) {
+                            Object obj = parent.getItemAtPosition(position);
+                            LOG(LOGD, null, "onItemClick obj = " + obj);
+                            if (obj instanceof ChannelListItem) {
+                                ChannelListItem item = (ChannelListItem)obj;
+
+                            }
+                        }
                         break;
                     case R.id.favourite:
                         LOG(LOGD, null, "onItemClick favourite position = " + position + ", id = " + id);
@@ -282,25 +291,25 @@ public class SortFavActivity extends Activity {
                     case R.id.sort_key:
                         LOG(LOGD, null, "onFocusChange sort_key hasFocus = " + hasFocus);
                         if (hasFocus) {
-                            mSortListView.setSelection(mSortListView.getSelectedItemPosition());
+                            //mSortListView.setSelection(mSortListView.getSelectedItemPosition());
                         }
                         break;
                     case R.id.sort_channel:
                         LOG(LOGD, null, "onFocusChange sort_channel hasFocus = " + hasFocus);
                         if (hasFocus) {
-                            mContentListView.setSelection(mContentListView.getSelectedItemPosition());
+                            //mContentListView.setSelection(mContentListView.getSelectedItemPosition());
                         }
                         break;
                     case R.id.sort_channel_all:
                         LOG(LOGD, null, "onFocusChange sort_channel_all hasFocus = " + hasFocus);
                         if (hasFocus) {
-                            mAllListView.setSelection(mAllListView.getSelectedItemPosition());
+                            //mAllListView.setSelection(mAllListView.getSelectedItemPosition());
                         }
                         break;
                     case R.id.favourite:
                         LOG(LOGD, null, "onFocusChange favourite hasFocus = " + hasFocus);
                         if (hasFocus) {
-                            mFavListView.setSelection(mFavListView.getSelectedItemPosition());
+                            //mFavListView.setSelection(mFavListView.getSelectedItemPosition());
                         }
                         break;
                     case R.id.red_sort_button:

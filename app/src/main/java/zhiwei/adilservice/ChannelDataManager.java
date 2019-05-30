@@ -22,6 +22,14 @@ public class ChannelDataManager {
     private ContentResolver mContentResolver;
     private static final String KEY_SETTINGS_FAVLIST = "settings_favlist";
     private static final String KEY_SETTINGS_CHANNELLIST = "settings_channellist";
+    public static final String KEY_SETTINGS_CHANNEL_NAME = "channel_name";
+    public static final String KEY_SETTINGS_CHANNEL_FREQUENCY = "channel_frequency";
+    public static final String KEY_SETTINGS_CHANNEL_NETWORK_ID = "network_id";
+    public static final String KEY_SETTINGS_CHANNEL_IS_FAVOURITE = "is_favourite";
+    public static final String KEY_SETTINGS_CHANNEL_FAV_INDEX = "fav_index";
+    public static final String KEY_SETTINGS_FAV_NAME = "fav_name";
+    public static final String KEY_SETTINGS_FAV_INDEX = "original_index";
+    public static final String KEY_SETTINGS_FAV_IS_ADDED = "is_added";
 
     public ChannelDataManager(Context context) {
         this.mContext = context;
@@ -38,19 +46,19 @@ public class ChannelDataManager {
             for (int i = 0; i < 26; i++) {
                 A[0] = (byte)('A' + (byte)i);//(byte)'A' + (byte)i;
                 childObj = new JSONObject();
-                childObj.put("channel_name", (new String(A)) + DEFAULTNAME + String.valueOf(2 * i));
-                childObj.put("frequency", (2 * i + 1) * 10);
-                childObj.put("network_id", i + 1);
-                childObj.put("is_favourite", false);
-                childObj.put("original_index", i);
+                childObj.put(KEY_SETTINGS_CHANNEL_NAME, (new String(A)) + DEFAULTNAME + String.valueOf(2 * i));
+                childObj.put(KEY_SETTINGS_CHANNEL_FREQUENCY, (2 * i + 1) * 10);
+                childObj.put(KEY_SETTINGS_CHANNEL_NETWORK_ID, i + 1);
+                childObj.put(KEY_SETTINGS_CHANNEL_IS_FAVOURITE, false);
+                childObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, (new JSONArray().toString()));
                 result.add(childObj.toString());
                 array.put(childObj);
                 childObj = new JSONObject();
-                childObj.put("channel_name", (new String(A)) + DEFAULTNAME + String.valueOf(2 * i + 1));
-                childObj.put("frequency", (2 * i + 2) * 10);
-                childObj.put("network_id", i + 1);
-                childObj.put("original_index", i);
-                childObj.put("is_favourite", true);
+                childObj.put(KEY_SETTINGS_CHANNEL_NAME, (new String(A)) + DEFAULTNAME + String.valueOf(2 * i + 1));
+                childObj.put(KEY_SETTINGS_CHANNEL_FREQUENCY, (2 * i + 2) * 10);
+                childObj.put(KEY_SETTINGS_CHANNEL_NETWORK_ID, i + 1);
+                childObj.put(KEY_SETTINGS_CHANNEL_IS_FAVOURITE, false);
+                childObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, (new JSONArray().toString()));
                 result.add(childObj.toString());
                 array.put(childObj);
             }
@@ -66,7 +74,7 @@ public class ChannelDataManager {
 
     public List<String> getChannelList(String inputId) {
         List<String> result = new ArrayList<String>();
-        String jsonStr = getStringFromSettings(KEY_SETTINGS_CHANNELLIST);
+        String jsonStr = getStringFromXml(KEY_SETTINGS_CHANNELLIST, null);
         if (TextUtils.isEmpty(jsonStr)) {
             result = initTestChannelList();
         } else {
@@ -88,7 +96,7 @@ public class ChannelDataManager {
                     try {
                         jsonObj = new JSONObject(objStr);
                         if (jsonObj != null && jsonObj.length() > 0) {
-                            item = new ChannelListItem(mContext, (String)jsonObj.getString("channel_name"), (boolean)jsonObj.getBoolean("is_favourite"));
+                            item = new ChannelListItem(mContext, jsonObj.getString(KEY_SETTINGS_CHANNEL_NAME), jsonObj.getBoolean(KEY_SETTINGS_CHANNEL_IS_FAVOURITE), jsonObj.getJSONArray(KEY_SETTINGS_CHANNEL_FAV_INDEX).toString());
                             result.add(item);
                         }
                     } catch (JSONException e) {
@@ -143,9 +151,9 @@ public class ChannelDataManager {
         try {
             for (int i = 0; i < 64; i++) {
                 childObj = new JSONObject();
-                childObj.put("name", DEFAULTNAME + String.valueOf(i));
-                childObj.put("original_index", i);
-                childObj.put("is_favourite", (i % 2 == 0) ? true : false);
+                childObj.put(KEY_SETTINGS_FAV_NAME, DEFAULTNAME + String.valueOf(i));
+                childObj.put(KEY_SETTINGS_FAV_INDEX, i);
+                childObj.put(KEY_SETTINGS_FAV_IS_ADDED, false);
                 array.put(childObj);
             }
         } catch (JSONException e) {
@@ -164,7 +172,7 @@ public class ChannelDataManager {
         if (initArray != null && initArray.length() > 0) {
             for (int i = 0; i < initArray.length(); i++) {
                 try {
-                    result.add(((JSONObject)initArray.get(i)).getString("name"));
+                    result.add(initArray.getJSONObject(i).getString(KEY_SETTINGS_FAV_NAME));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -175,16 +183,20 @@ public class ChannelDataManager {
 
     public LinkedList<Item> getFavListItem() {
         LinkedList<Item> result = new LinkedList<Item>();
-        JSONArray initArray = init64FavList();
-        if (initArray != null && initArray.length() > 0) {
-            saveStringToXml(KEY_SETTINGS_FAVLIST, initArray.toString());
+        JSONArray initArray = null;
+        String jsonStr = getStringFromXml(KEY_SETTINGS_FAVLIST, null);
+        if (TextUtils.isEmpty(jsonStr)) {
+            initArray = init64FavList();
+            if (initArray != null && initArray.length() > 0) {
+                saveStringToXml(KEY_SETTINGS_FAVLIST, initArray.toString());
+            }
         }
         if (initArray != null && initArray.length() > 0) {
             Item item = null;
             for (int i = 0; i < initArray.length(); i++) {
                 try {
                     JSONObject obj = (JSONObject)initArray.get(i);
-                    item = new FavListItem(mContext, obj.getString("name"), obj.getBoolean("is_favourite"));
+                    item = new FavListItem(mContext, obj.getString(KEY_SETTINGS_FAV_NAME), obj.getBoolean(KEY_SETTINGS_FAV_IS_ADDED));
                     result.add(item);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -194,10 +206,10 @@ public class ChannelDataManager {
         return result;
     }
 
-    public List<String> getFavList() {
+    private List<String> getFavList() {
         List<String> result = new ArrayList<String>();
         JSONArray array = null;
-        String jsonStr = getStringFromSettings(KEY_SETTINGS_FAVLIST);
+        String jsonStr = getStringFromXml(KEY_SETTINGS_FAVLIST, null);
         if (TextUtils.isEmpty(jsonStr)) {
             result = getInit64FavList();
         } else {
@@ -239,14 +251,14 @@ public class ChannelDataManager {
         return result;
     }
 
-    public boolean putStringToSettings(String name, String value) {
+    /*public boolean putStringToSettings(String name, String value) {
         return Settings.System.putString(mContentResolver, name, value);
     }
 
     public String getStringFromSettings(String name) {
         return Settings.System.getString(mContentResolver, name);
 
-    }
+    }*/
 
     public void saveStringToXml(String key, String jsonValue) {
         SharedPreferences userSettings = mContext.getSharedPreferences("channel_info", Context.MODE_PRIVATE);

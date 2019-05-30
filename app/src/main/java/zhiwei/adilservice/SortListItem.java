@@ -22,6 +22,11 @@ public class SortListItem extends Item {
     }
 
     @Override
+    protected JSONObject getJSONObject() {
+        return null;
+    }
+
+    @Override
     protected int getResourceId() {
         return R.layout.item_sortlist_layout;
     }

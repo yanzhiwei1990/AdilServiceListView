@@ -1,6 +1,7 @@
 package zhiwei.adilservice;
 
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -20,6 +21,35 @@ public abstract class Item {
     protected abstract Drawable getDrawable();
     protected abstract boolean needIconDrawable();
     protected abstract String getLayoutIdInfo();
+    protected abstract JSONObject getJSONObject();
+
+    protected String getStringValueFromJSONObject(String key) {
+        String result = null;
+        JSONObject obj = getJSONObject();
+        if (!TextUtils.isEmpty(key) && obj != null && obj.length() > 0) {
+            try {
+                String value = obj.getString(key);
+                result = value;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    protected int getIntValueFromJSONObject(String key) {
+        int result = -1;
+        JSONObject obj = getJSONObject();
+        if (!TextUtils.isEmpty(key) && obj != null && obj.length() > 0) {
+            try {
+                int value = obj.getInt(key);
+                result = value;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 
     protected boolean isNeedShowIcon() {
         return false;

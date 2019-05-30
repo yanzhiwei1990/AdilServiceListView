@@ -2,6 +2,8 @@ package zhiwei.adilservice;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,12 +15,19 @@ public class FavListItem extends Item {
     private Context mContext;
     private String mName;
     private boolean needShowIcon = false;
+    private String mInfoJson;
+    private JSONObject mJSONObject;
 
     public FavListItem(Context context, String name, boolean show) {
         super(FavListItem.class.getSimpleName());
         this.mContext = context;
         this.mName = name;
         this.needShowIcon = show;
+    }
+
+    @Override
+    protected JSONObject getJSONObject() {
+        return mJSONObject;
     }
 
     @Override
