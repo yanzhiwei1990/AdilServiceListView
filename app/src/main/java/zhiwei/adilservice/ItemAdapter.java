@@ -22,21 +22,23 @@ public class ItemAdapter extends CommonAdapter<Item> {
 
     private LinkedList<Item> mData;
     private Context mContext;
+    private String mTitle;
 
-    public ItemAdapter(LinkedList<Item> data, Context context) {
-        super(data, context);
+    public ItemAdapter(LinkedList<Item> data, Context context, String title) {
+        super(data, context, title);
         this.mData = data;
         this.mContext = context;
+        this.mTitle = title;
     }
 
     @Override
-    public CommonViewHolder setViewContent(Context context, View view, ViewGroup parent, int position, Item item) {
+    public CommonViewHolder setViewContent(Context context, String itemname, View view, ViewGroup parent, int position, Item item) {
         CommonViewHolder viewHolder = CommonViewHolder.get(context, view, parent, item.getResourceId(), position);
         int titleTextResId = item.getTitleId();
         int iconTextResId = item.getIconTextId();
         String title = item.getTitle();
         Drawable iconDrawable = item.getDrawable();
-        //Log.d(TAG, "setViewContent fixed titleTextResId = " + titleTextResId + ", iconTextResId = " + iconTextResId + ", item = " + item + ", iconDrawable = " + iconDrawable);
+        //Log.d(TAG, "setViewContent fixed itemname = " +  itemname + ", titleTextResId = " + titleTextResId + ", iconTextResId = " + iconTextResId + ", item = " + item + ", iconDrawable = " + iconDrawable);
         //add extend intreface
         try {
             JSONArray array = new JSONArray(item.getLayoutIdInfo());

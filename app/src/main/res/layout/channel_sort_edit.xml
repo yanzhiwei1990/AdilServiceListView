@@ -156,7 +156,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/favlist_title"

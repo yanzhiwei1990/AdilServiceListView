@@ -81,7 +81,7 @@ public class ChannelListItem extends Item {
     protected String getLayoutIdInfo() {
         String result = null;
         JSONArray array = new JSONArray();
-        JSONObject obj = new JSONObject();
+        JSONObject obj = null;
         try {
             array.put(2);//first element represent total number of sub view
             obj = new JSONObject(addTextView(R.id.title_text, mName));
@@ -103,7 +103,7 @@ public class ChannelListItem extends Item {
             if (!TextUtils.isEmpty(mInfoJson)) {
                 JSONObject obj =  new JSONObject(mInfoJson);
                 if (obj != null && obj.length() > 0) {
-                    JSONArray array = obj.getJSONArray("fav_index");
+                    JSONArray array = obj.getJSONArray(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
                     if (array != null && array.length() > 0) {
                         for (int i = 0; i < array.length(); i++) {
                             result.add(array.getInt(i));

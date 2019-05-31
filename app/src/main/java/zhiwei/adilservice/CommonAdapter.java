@@ -12,10 +12,12 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
     private LinkedList<T> mData;
     private Context mContext;
+    private String mTitle;
 
-    public CommonAdapter(LinkedList<T> mData, Context mContext) {
+    public CommonAdapter(LinkedList<T> mData, Context mContext, String title) {
         this.mData = mData;
         this.mContext = mContext;
+        this.mTitle = title;
     }
 
     @Override
@@ -36,9 +38,9 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         T item = mData.get(position);
-        CommonViewHolder viewHolder = setViewContent(mContext, convertView, parent, position, item);
+        CommonViewHolder viewHolder = setViewContent(mContext, mTitle, convertView, parent, position, item);
         return viewHolder.getConvertView();
     }
 
-    protected abstract CommonViewHolder setViewContent(Context context, View view, ViewGroup parent, int position, T t);
+    protected abstract CommonViewHolder setViewContent(Context context, String title, View view, ViewGroup parent, int position, T t);
 }

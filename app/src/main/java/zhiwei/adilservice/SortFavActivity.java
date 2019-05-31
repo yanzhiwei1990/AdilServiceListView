@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.util.Log;
@@ -79,6 +80,18 @@ public class SortFavActivity extends Activity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LOG(LOGD, null, "onKeyDown " + event);
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        LOG(LOGD, null, "onKeyUp " + event);
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         try {
@@ -140,14 +153,16 @@ public class SortFavActivity extends Activity {
         mAllListView = (ChannelListListView)findViewById(R.id.sort_channel_all);
         mFavListView = (FavListListView) findViewById(R.id.favourite);
         ItemAdapter adapter = null;
-        adapter = new ItemAdapter(mChannelDataManager.getChannelListItem("adtv"), this);
+        adapter = new ItemAdapter(mChannelDataManager.getChannelListItem("adtv"), this, ChannelListItem.class.getSimpleName());
         mAllListView.setAdapter(adapter);
 
+        mAllListView.setVisibility(View.VISIBLE);
         mSortListView.setVisibility(View.GONE);
         mContentListView.setVisibility(View.GONE);
 
-        adapter = new ItemAdapter(mChannelDataManager.getFavListItem(), this);
+        adapter = new ItemAdapter(mChannelDataManager.getFavListItem(), this, FavListItem.class.getSimpleName());
         mFavListView.setAdapter(adapter);
+        mFavListView.setVisibility(View.VISIBLE);
 
         setListener();
         /*mAllListView.setSelection(2);
@@ -226,7 +241,6 @@ public class SortFavActivity extends Activity {
                         break;
                     case R.id.sort_channel_all:
                         LOG(LOGD, null, "onItemClick sort_channel position = " + position + ", id = " + id);
-                        LOG(LOGD, null, "onItemClick parent = " + parent + ", view = " + view);
                         if (parent instanceof ChannelListListView) {
                             Object obj = parent.getItemAtPosition(position);
                             LOG(LOGD, null, "onItemClick obj = " + obj);
