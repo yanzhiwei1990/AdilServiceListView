@@ -85,8 +85,8 @@
                 android:id="@+id/sat_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
-                android:text="SAT:" />
+                android:text="SAT:"
+                android:textSize="@dimen/title_text_size" />
 
             <zhiwei.adilservice.MarqueeTextView
                 android:id="@+id/sat"
@@ -96,18 +96,18 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:ellipsize="marquee"
-                android:singleLine="true"
                 android:focusable="true"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:textSize="@dimen/content_text_size"
-                android:text="Satellite" />
+                android:singleLine="true"
+                android:text="Satellite"
+                android:textSize="@dimen/content_text_size" />
 
             <TextView
                 android:id="@+id/tp_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
-                android:text="TP:" />
+                android:text="TP:"
+                android:textSize="@dimen/title_text_size" />
 
             <zhiwei.adilservice.MarqueeTextView
                 android:id="@+id/trans"
@@ -117,11 +117,11 @@
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:ellipsize="marquee"
-                android:singleLine="true"
                 android:focusable="true"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:textSize="@dimen/content_text_size"
-                android:text="Transponder" />
+                android:singleLine="true"
+                android:text="Transponder"
+                android:textSize="@dimen/content_text_size" />
         </LinearLayout>
 
         <LinearLayout

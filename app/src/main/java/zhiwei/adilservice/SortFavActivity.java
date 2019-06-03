@@ -14,6 +14,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,7 @@ public class SortFavActivity extends Activity {
     private ChannelListListView mSortListView;
     private ChannelListListView mContentListView;
     private FavListListView mFavListView;
+    private LinearLayout mRightShowContainner;
 
     private TextView mLeftTitle;
     private TextView mRightTitle;
@@ -165,8 +167,11 @@ public class SortFavActivity extends Activity {
                 if (mContentListView.getVisibility() == View.VISIBLE) {
                     mContentListView.setVisibility(View.GONE);
                 }
-                if (mFavListView.getVisibility() == View.VISIBLE) {
+                /*if (mFavListView.getVisibility() == View.VISIBLE) {
                     mFavListView.setVisibility(View.GONE);
+                }*/
+                if (mRightShowContainner.getVisibility() == View.VISIBLE) {
+                    mRightShowContainner.setVisibility(View.GONE);
                 }
                 dealActionUI(action);
                 break;
@@ -183,8 +188,11 @@ public class SortFavActivity extends Activity {
                 if (mAllListView.getVisibility() == View.VISIBLE) {
                     mAllListView.setVisibility(View.GONE);
                 }
-                if (mFavListView.getVisibility() == View.VISIBLE) {
+                /*if (mFavListView.getVisibility() == View.VISIBLE) {
                     mFavListView.setVisibility(View.GONE);
+                }*/
+                if (mRightShowContainner.getVisibility() == View.VISIBLE) {
+                    mRightShowContainner.setVisibility(View.GONE);
                 }
                 dealActionUI(action);
                 break;
@@ -193,8 +201,11 @@ public class SortFavActivity extends Activity {
                 break;
             case ACTION_FUNVTION_ADD_FAV:
             case ACTION_FUNVTION_FAVLIST:
-                if (mFavListView.getVisibility() != View.VISIBLE) {
+                /*if (mFavListView.getVisibility() != View.VISIBLE) {
                     mFavListView.setVisibility(View.VISIBLE);
+                }*/
+                if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                    mRightShowContainner.setVisibility(View.VISIBLE);
                 }
                 dealActionUI(action);
                 break;
@@ -301,6 +312,7 @@ public class SortFavActivity extends Activity {
         mContentListView = (ChannelListListView)findViewById(R.id.sort_channel);
         mAllListView = (ChannelListListView)findViewById(R.id.sort_channel_all);
         mFavListView = (FavListListView) findViewById(R.id.favourite);
+        mRightShowContainner = (LinearLayout) findViewById(R.id.right_show);
         ItemAdapter adapter = null;
         adapter = new ItemAdapter(mChannelDataManager.getChannelListItem("adtv"), this, ChannelListItem.class.getSimpleName());
         mAllListView.setAdapter(adapter);
@@ -311,7 +323,8 @@ public class SortFavActivity extends Activity {
 
         //adapter = new ItemAdapter(mChannelDataManager.getFavListItem(), this, FavListItem.class.getSimpleName());
         //mFavListView.setAdapter(adapter);
-        mFavListView.setVisibility(View.GONE);
+        mRightShowContainner.setVisibility(View.GONE);
+        //mFavListView.setVisibility(View.GONE);
 
         setListener();
         /*mAllListView.setSelection(2);
