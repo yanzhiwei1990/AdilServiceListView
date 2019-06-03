@@ -4,6 +4,7 @@ package zhiwei.adilservice;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ListView;
 
 public abstract class CustomedListView extends ListView {

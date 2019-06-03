@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ChannelListItem extends Item {
@@ -103,7 +104,8 @@ public class ChannelListItem extends Item {
             if (!TextUtils.isEmpty(mInfoJson)) {
                 JSONObject obj =  new JSONObject(mInfoJson);
                 if (obj != null && obj.length() > 0) {
-                    JSONArray array = obj.getJSONArray(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+                     String arrayString = obj.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+                    JSONArray array = new JSONArray(arrayString);
                     if (array != null && array.length() > 0) {
                         for (int i = 0; i < array.length(); i++) {
                             result.add(array.getInt(i));
@@ -113,6 +115,63 @@ public class ChannelListItem extends Item {
             }
         } catch (JSONException e) {
             Log.e(TAG, "getFavAllIndex e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getUpdateFavAllIndexArrayString(boolean delete,int favId) {
+        String result = null;
+        JSONArray array = new JSONArray();
+        List<Integer> list = getFavAllIndex();
+        if (list != null && list.size() > 0) {
+            Iterator<Integer> iterator = list.iterator();
+            boolean hasSame = false;
+            while (iterator.hasNext()) {
+                int id = (Integer)iterator.next();
+                if (favId == id) {
+                    if (delete) {
+                        continue;
+                    } else {
+                        hasSame = true;
+                    }
+                }
+                array.put(id);
+            }
+            if (hasSame && !delete) {
+                array.put(favId);
+            }
+        }
+        result = array.toString();
+        try {
+            mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX, result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getFavArrayJsonStr() {
+        String result = null;
+        try {
+            result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public long getChannelId() {
+        long result = -1;
+        try {
+            if (!TextUtils.isEmpty(mInfoJson)) {
+                JSONObject obj =  new JSONObject(mInfoJson);
+                if (obj != null && obj.length() > 0) {
+                    result = obj.getLong(ChannelDataManager.KEY_SETTINGS_CHANNEL_ID);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getChannelId e = " + e.getMessage());
             e.printStackTrace();
         }
         return result;

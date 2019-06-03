@@ -31,6 +31,36 @@ public class ItemAdapter extends CommonAdapter<Item> {
         this.mTitle = title;
     }
 
+    public void setDataByPosition(int position, Item item) {
+        if (mData != null && mData.size() >= position) {
+            mData.set(position,item );
+        }
+    }
+
+    public void setAllData(LinkedList<Item> data) {
+        mData = data;
+    }
+
+    public LinkedList<Item> getAllData() {
+        return mData;
+    }
+
+
+    @Override
+    public int getCount() {
+        return mData.size();
+    }
+
+    @Override
+    public Item getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public CommonViewHolder setViewContent(Context context, String itemname, View view, ViewGroup parent, int position, Item item) {
         CommonViewHolder viewHolder = CommonViewHolder.get(context, view, parent, item.getResourceId(), position);

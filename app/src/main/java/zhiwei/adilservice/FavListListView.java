@@ -4,7 +4,10 @@ package zhiwei.adilservice;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+
+import java.util.LinkedList;
 
 public class FavListListView extends CustomedListView {
     private static final String TAG = FavListListView.class.getSimpleName();
@@ -38,5 +41,31 @@ public class FavListListView extends CustomedListView {
         } else {
             super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
+    }
+
+    public void updateItem(int position, Item item) {
+        ItemAdapter adapter = (ItemAdapter)this.getAdapter();
+        if (adapter == null) {
+            Log.d(TAG, "updateItem null return");
+            return;
+        }
+        adapter.setDataByPosition(position,item);
+        int firstVisiblePosition = this.getFirstVisiblePosition();
+        int lastVisiblePosition = this.getLastVisiblePosition();
+        if (position >= firstVisiblePosition && position <= lastVisiblePosition) {
+            View view = this.getChildAt(position - firstVisiblePosition);
+            adapter.getView(position, view, this);
+        }
+    }
+
+    public void updateAllItem(Context context, LinkedList<Item> data) {
+        ItemAdapter adapter = (ItemAdapter)getAdapter();
+        if (adapter == null) {
+            adapter = new ItemAdapter(data, context, TAG);
+            setAdapter(adapter);
+            Log.d(TAG, "updateAllItem init adapter");
+        }
+        ((ItemAdapter)getAdapter()).setAllData(data);
+        ((ItemAdapter)getAdapter()).notifyDataSetChanged();
     }
 }

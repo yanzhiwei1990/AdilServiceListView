@@ -18,11 +18,24 @@ public class FavListItem extends Item {
     private String mInfoJson;
     private JSONObject mJSONObject;
 
-    public FavListItem(Context context, String name, boolean show) {
+    public FavListItem(Context context, String name, boolean show, String objJson) {
         super(FavListItem.class.getSimpleName());
         this.mContext = context;
         this.mName = name;
         this.needShowIcon = show;
+        this.mInfoJson = objJson;
+        this.initJSONObject(objJson);
+    }
+
+    private void initJSONObject(String json) {
+        try {
+            if (!TextUtils.isEmpty(json)) {
+                mJSONObject =  new JSONObject(json);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "initJSONObject e = " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -76,6 +89,35 @@ public class FavListItem extends Item {
         }
         if (array != null && array.length() > 2) {
             result = array.toString();
+        }
+        return result;
+    }
+
+    public int getFavId() {
+        int result = -1;
+        try {
+            if (!TextUtils.isEmpty(mInfoJson)) {
+                JSONObject obj =  new JSONObject(mInfoJson);
+                if (obj != null && obj.length() > 0) {
+                    result = obj.getInt(ChannelDataManager.KEY_SETTINGS_FAV_INDEX);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getChannelId e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean isAllFavList() {
+        boolean result = false;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getBoolean(ChannelDataManager.KEY_SETTINGS_IS_ALL_FAV_LIST);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "isAllFavList e = " + e.getMessage());
+            e.printStackTrace();
         }
         return result;
     }
