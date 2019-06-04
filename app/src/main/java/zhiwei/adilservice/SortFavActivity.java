@@ -238,17 +238,22 @@ public class SortFavActivity extends Activity {
         LOG(LOGD, null, "dealActionUI = " + action);
         switch (action) {
             case ACTION_CHANNEL_SORT_ALL:
+                mLeftTitle.setText(R.string.channel_list_all);
                 mAllListView.updateAllItem(this, mChannelDataManager.getChannelListItem(""));
                 break;
             case ACTION_CHANNEL_SORT_AZ:
+                mLeftTitle.setText(R.string.channel_list_all);
                 //mSortListView.updateAllItem(mChannelDataManager.getAZSortKeyList());
                 //mContentListView.updateAllItem(mChannelDataManager.getAZSortChannelList());
                 break;
             case ACTION_CHANNEL_SORT_TP:
+                mLeftTitle.setText(R.string.channel_list_all);
                 //mSortListView.updateAllItem(mChannelDataManager.getTPSortKeyList());
                 //mContentListView.updateAllItem(mChannelDataManager.getTPSortChannelList());
+
                 break;
             case ACTION_CHANNEL_SORT_NETWORKID:
+                mLeftTitle.setText(R.string.channel_list_all);
                 //mSortListView.updateAllItem(mChannelDataManager.getOperatorSortKeyList());
                 //mContentListView.updateAllItem(mChannelDataManager.getOperatorSortChannelList());
                 break;
@@ -265,16 +270,19 @@ public class SortFavActivity extends Activity {
                         if (adapter != null && adapter.getCount() > 0 && adapter.getCount() > mCurrentEditChannelIndex) {
                             mFavListView.updateAllItem(this, mChannelDataManager.getChannelFavListItem((ChannelListItem)adapter.getItem(mCurrentEditChannelIndex)));
                             mFavListView.requestFocus();
+                            mFavListView.setSelection(0);
                         }
                     }
                 }
                 break;
             case ACTION_FUNVTION_SATELLITE:
+                mLeftTitle.setText(R.string.channel_list_all);
                 //mAllListView.updateAllItem(mChannelDataManager.getChannelListItem(""));
                 break;
             case ACTION_FUNVTION_FAVLIST:
                 mFavListView.updateAllItem(this, mChannelDataManager.getFavListItem());
                 mFavListView.requestFocus();
+                mFavListView.setSelection(0);
                 break;
             default:
                 break;
@@ -643,7 +651,17 @@ public class SortFavActivity extends Activity {
                         mChannelDataManager.updateChannelListChangeToDatabase(updateChannel);
                     }
                 } else {
-
+                    if (mSortListView.getVisibility() == View.VISIBLE) {
+                        mSortListView.setVisibility(View.GONE);
+                    }
+                    if (mContentListView.getVisibility() == View.VISIBLE) {
+                        mContentListView.setVisibility(View.GONE);
+                    }
+                    if (mAllListView.getVisibility() != View.VISIBLE) {
+                        mContentListView.setVisibility(View.VISIBLE);
+                    }
+                    mLeftTitle.setText(favItem.getTitle());
+                    mAllListView.updateAllItem(this, mChannelDataManager.getChannelItemByFavPage(favItem.getFavId()));
                 }
             }
         }

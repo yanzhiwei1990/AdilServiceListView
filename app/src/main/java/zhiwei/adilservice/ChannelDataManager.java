@@ -308,6 +308,43 @@ public class ChannelDataManager {
         return result;
     }
 
+    public LinkedList<Item> getChannelItemByFavPage(int favId) {
+        LinkedList<Item> result = new LinkedList<Item>();
+        List<String> list = getChannelList("");
+        if (list != null && list.size() > 0) {
+            Iterator<String> iterator = list.iterator();
+            JSONObject obj = null;
+            JSONArray array = null;
+            String channelObjjsonSrt = null;
+            ChannelListItem oneItem = null;
+            boolean hasFav = false;
+            while (iterator.hasNext()) {
+                hasFav = false;
+                channelObjjsonSrt = (String)iterator.next();
+                try {
+                    obj = new JSONObject(channelObjjsonSrt);
+                    if (obj != null && obj.length() > 0) {
+                        array = new JSONArray(obj.getString(KEY_SETTINGS_CHANNEL_FAV_INDEX));
+                    }
+                    if (array != null && array.length() > 0) {
+                        for (int i = 0; i < array.length(); i++) {
+                            if (favId == (int)array.get(i)) {
+                                hasFav = true;
+                                oneItem = new ChannelListItem(mContext, obj.getString(KEY_SETTINGS_CHANNEL_NAME), hasFav, obj.toString());
+                                result.add(oneItem);
+                                break;
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+    }
+
     public void updateFavListChangeToDatabase(String data) {
         saveStringToXml(KEY_SETTINGS_FAVLIST, data);
     }
