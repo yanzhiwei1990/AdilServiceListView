@@ -22,6 +22,7 @@ public abstract class Item {
     protected abstract boolean needIconDrawable();
     protected abstract String getLayoutIdInfo();
     protected abstract JSONObject getJSONObject();
+    protected abstract boolean isNeedShowIcon();
 
     protected String getStringValueFromJSONObject(String key) {
         String result = null;
@@ -49,10 +50,6 @@ public abstract class Item {
             }
         }
         return result;
-    }
-
-    protected boolean isNeedShowIcon() {
-        return false;
     }
 
     protected int getTitleId() {

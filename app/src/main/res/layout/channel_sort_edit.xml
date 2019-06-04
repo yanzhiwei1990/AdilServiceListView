@@ -53,9 +53,9 @@
                 android:divider="@null"
                 android:listSelector="@drawable/selector_channellistitem"
                 android:nextFocusLeft="@id/sort_key"
-                android:nextFocusRight="@id/favourite"
-                android:nextFocusUp="@id/f1_button"
-                android:nextFocusDown="@id/red_sort_button"
+                android:nextFocusRight="@id/sort_sort_button"
+                android:nextFocusUp="@id/f4_button"
+                android:nextFocusDown="@id/sort_sort_button"
                 android:visibility="gone" />
 
             <zhiwei.adilservice.ChannelListListView
@@ -67,7 +67,7 @@
                 android:divider="@null"
                 android:listSelector="@drawable/selector_channellistitem"
                 android:nextFocusLeft="@id/red_sort_button"
-                android:nextFocusRight="@id/favourite"
+                android:nextFocusRight="@id/sort_sort_button"
                 android:nextFocusUp="@id/f1_button"
                 android:nextFocusDown="@id/red_sort_button"
                 android:visibility="visible" />
@@ -182,10 +182,7 @@
                 android:cacheColorHint="@android:color/transparent"
                 android:divider="@null"
                 android:listSelector="@drawable/selector_favlistitem"
-                android:nextFocusLeft="@id/channel_container"
-                android:nextFocusRight="@null"
-                android:nextFocusUp="@null"
-                android:nextFocusDown="@null" />
+                android:nextFocusLeft="@id/channel_container" />
         </LinearLayout>
 
     </LinearLayout>

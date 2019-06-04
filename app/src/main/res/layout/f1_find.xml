@@ -23,5 +23,6 @@
         android:background="@drawable/selector_buttonitem"
         android:gravity="center_vertical"
         android:text="@string/f1_find"
+        android:nextFocusLeft="@id/f4_button"
         android:textSize="@dimen/button_text_size" />
 </LinearLayout>

@@ -24,5 +24,6 @@
         android:background="@drawable/selector_buttonitem"
         android:gravity="center_vertical"
         android:textSize="@dimen/button_text_size"
+        android:nextFocusRight="@id/f1_button"
         android:text="@string/f4_favourite_list" />
 </LinearLayout>

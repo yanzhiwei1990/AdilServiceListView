@@ -45,6 +45,11 @@ public class SortListItem extends Item {
     }
 
     @Override
+    protected boolean isNeedShowIcon() {
+        return false;
+    }
+
+    @Override
     protected Drawable getDrawable() {
         return mContext.getDrawable(R.drawable.ic_star_white);
     }

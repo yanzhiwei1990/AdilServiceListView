@@ -55,6 +55,7 @@ public class ChannelListListView extends CustomedListView {
         adapter.setDataByPosition(position,item);
         int firstVisiblePosition = this.getFirstVisiblePosition();
         int lastVisiblePosition = this.getLastVisiblePosition();
+        //Log.d(TAG, "updateItem position = " + position + ", firstVisiblePosition = " + firstVisiblePosition + ", lastVisiblePosition = " + lastVisiblePosition);
         if (position >= firstVisiblePosition && position <= lastVisiblePosition) {
             View view = this.getChildAt(position - firstVisiblePosition);
             adapter.getView(position, view, this);

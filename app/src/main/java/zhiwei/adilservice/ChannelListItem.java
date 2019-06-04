@@ -101,15 +101,12 @@ public class ChannelListItem extends Item {
     public List<Integer> getFavAllIndex() {
         List<Integer> result = new ArrayList<Integer>();
         try {
-            if (!TextUtils.isEmpty(mInfoJson)) {
-                JSONObject obj =  new JSONObject(mInfoJson);
-                if (obj != null && obj.length() > 0) {
-                     String arrayString = obj.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
-                    JSONArray array = new JSONArray(arrayString);
-                    if (array != null && array.length() > 0) {
-                        for (int i = 0; i < array.length(); i++) {
-                            result.add(array.getInt(i));
-                        }
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                String arrayString = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+                JSONArray array = new JSONArray(arrayString);
+                if (array != null && array.length() > 0) {
+                    for (int i = 0; i < array.length(); i++) {
+                        result.add(array.getInt(i));
                     }
                 }
             }
@@ -120,27 +117,31 @@ public class ChannelListItem extends Item {
         return result;
     }
 
-    public String getUpdateFavAllIndexArrayString(boolean delete,int favId) {
+    public String getUpdateFavAllIndexArrayString(boolean isSelected,int favId) {
         String result = null;
         JSONArray array = new JSONArray();
         List<Integer> list = getFavAllIndex();
+        boolean hasDealt = false;
         if (list != null && list.size() > 0) {
             Iterator<Integer> iterator = list.iterator();
-            boolean hasSame = false;
             while (iterator.hasNext()) {
                 int id = (Integer)iterator.next();
                 if (favId == id) {
-                    if (delete) {
+                    if (!isSelected) {
                         continue;
-                    } else {
-                        hasSame = true;
                     }
+                    hasDealt = true;
                 }
                 array.put(id);
             }
-            if (hasSame && !delete) {
-                array.put(favId);
-            }
+        }
+        if (!hasDealt && isSelected) {
+            array.put(favId);
+        }
+        if (array != null && array.length() > 0) {
+            mNeedShowIcon = true;
+        } else {
+            mNeedShowIcon = false;
         }
         result = array.toString();
         try {
@@ -164,10 +165,9 @@ public class ChannelListItem extends Item {
     public long getChannelId() {
         long result = -1;
         try {
-            if (!TextUtils.isEmpty(mInfoJson)) {
-                JSONObject obj =  new JSONObject(mInfoJson);
-                if (obj != null && obj.length() > 0) {
-                    result = obj.getLong(ChannelDataManager.KEY_SETTINGS_CHANNEL_ID);
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                if (mJSONObject != null && mJSONObject.length() > 0) {
+                    result = mJSONObject.getLong(ChannelDataManager.KEY_SETTINGS_CHANNEL_ID);
                 }
             }
         } catch (JSONException e) {

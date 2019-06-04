@@ -35,6 +35,16 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         return position;
     }
 
+    public void setDataByPosition(int position, T item) {
+        if (mData != null && mData.size() >= position) {
+            mData.set(position,item );
+        }
+    }
+
+    public void setAllData(LinkedList<T> data) {
+        mData = data;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         T item = mData.get(position);

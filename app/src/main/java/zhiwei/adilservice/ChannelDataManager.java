@@ -54,10 +54,8 @@ public class ChannelDataManager {
                 childObj.put(KEY_SETTINGS_CHANNEL_FREQUENCY, (2 * i + 1) * 10);
                 childObj.put(KEY_SETTINGS_CHANNEL_NETWORK_ID, i + 1);
                 childObj.put(KEY_SETTINGS_CHANNEL_IS_FAVOURITE, false);
-                childTmpObj = new JSONObject();
-                childTmpObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, new JSONArray().toString());
-                childTmpObj.put(KEY_SETTINGS_CHANNEL_ID, (long)(2 * i));
-                childObj.put(KEY_SETTINGS_CHANNEL_JSONOBJ, childTmpObj.toString());
+                childObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, new JSONArray().toString());
+                childObj.put(KEY_SETTINGS_CHANNEL_ID, (long)(2 * i));
                 result.add(childObj.toString());
                 array.put(childObj);
                 childObj = new JSONObject();
@@ -65,10 +63,8 @@ public class ChannelDataManager {
                 childObj.put(KEY_SETTINGS_CHANNEL_FREQUENCY, (2 * i + 2) * 10);
                 childObj.put(KEY_SETTINGS_CHANNEL_NETWORK_ID, i + 1);
                 childObj.put(KEY_SETTINGS_CHANNEL_IS_FAVOURITE, false);
-                childTmpObj = new JSONObject();
-                childTmpObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, new JSONArray().toString());
-                childTmpObj.put(KEY_SETTINGS_CHANNEL_ID, (long)(2 * i));
-                childObj.put(KEY_SETTINGS_CHANNEL_JSONOBJ, childTmpObj.toString());
+                childObj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, new JSONArray().toString());
+                childObj.put(KEY_SETTINGS_CHANNEL_ID, (long)(2 * i + 1));
                 result.add(childObj.toString());
                 array.put(childObj);
             }
@@ -97,7 +93,6 @@ public class ChannelDataManager {
         LinkedList<Item> result = new LinkedList<Item>();
         List<String> list = getChannelList(inputId);
         if (list != null && list.size() > 0) {
-            Log.d(TAG, "getChannelListItem size = " + list.size());
             Iterator<String> iterator = list.iterator();
             JSONObject jsonObj = null;
             Item item = null;
@@ -108,7 +103,13 @@ public class ChannelDataManager {
                         jsonObj = new JSONObject(objStr);
                         //Log.d(TAG, "getChannelListItem jsonObj = " + jsonObj.toString());
                         if (jsonObj != null && jsonObj.length() > 0) {
-                            item = new ChannelListItem(mContext, jsonObj.getString(KEY_SETTINGS_CHANNEL_NAME), jsonObj.getBoolean(KEY_SETTINGS_CHANNEL_IS_FAVOURITE), jsonObj.getString(KEY_SETTINGS_CHANNEL_JSONOBJ));
+                            String favArrayStr = jsonObj.getString(KEY_SETTINGS_CHANNEL_FAV_INDEX);
+                            JSONArray favArray = new JSONArray(favArrayStr);
+                            boolean isFaved = false;
+                            if (favArray != null && favArray.length() > 0) {
+                                isFaved = true;
+                            }
+                            item = new ChannelListItem(mContext, jsonObj.getString(KEY_SETTINGS_CHANNEL_NAME), isFaved, jsonObj.toString());
                             result.add(item);
                         }
                     } catch (JSONException e) {
@@ -133,12 +134,14 @@ public class ChannelDataManager {
                     if (channelId == obj.getLong(KEY_SETTINGS_CHANNEL_ID)) {
                         if (!TextUtils.equals(favArrayString, obj.getString(KEY_SETTINGS_CHANNEL_FAV_INDEX))) {
                             obj.put(KEY_SETTINGS_CHANNEL_FAV_INDEX, favArrayString);
-                            all.set(count++, obj.toString());
+                            Log.d(TAG, "genarateUpdatedChannelListJsonSrt count = " + count + ", name = " + obj.getString(KEY_SETTINGS_CHANNEL_NAME));
+                            all.set(count, obj.toString());
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                count++;
             }
             result = convertListToJsonStr(all);
         }
@@ -287,13 +290,13 @@ public class ChannelDataManager {
             for (int i = 0; i < initArray.length(); i++) {
                 try {
                     JSONObject obj = (JSONObject)initArray.get(i);
-                    //Log.d(TAG, "getFavListItem jsonObj = " + obj.toString());
+                    obj.put(KEY_SETTINGS_IS_ALL_FAV_LIST, false);
+                    //Log.d(TAG, "getChannelFavListItem jsonObj = " + obj.toString());
                     boolean isFavSelected = false;
                     if (channelFav != null && channelFav.size() > 0) {
-                        if (channelFav.indexOf(i) > -1) {
+                        if (channelFav.indexOf(Integer.valueOf(i)) > -1) {
                             isFavSelected = true;
                         }
-
                     }
                     item = new FavListItem(mContext, obj.getString(KEY_SETTINGS_FAV_NAME), isFavSelected, obj.toString());
                     result.add(item);
@@ -305,6 +308,10 @@ public class ChannelDataManager {
         return result;
     }
 
+    public void updateFavListChangeToDatabase(String data) {
+        saveStringToXml(KEY_SETTINGS_FAVLIST, data);
+    }
+
     private List<String> produceListFromJsonStr(String json) {
         List<String> result = new ArrayList<String>();
         if (!TextUtils.isEmpty(json)) {
@@ -312,7 +319,7 @@ public class ChannelDataManager {
                 JSONArray array = new JSONArray(json);
                 if (array != null && array.length() > 0) {
                     for (int i = 0; i < array.length(); i++) {
-                        result.add(((JSONObject)array.get(i)).toString());
+                        result.add(array.getString(i));
                     }
                 }
             } catch (JSONException e) {
@@ -324,12 +331,13 @@ public class ChannelDataManager {
     }
 
     private String convertListToJsonStr(final List<String> list) {
-        String result = "{}";
+        String result = null;
         Iterator<String> iterator = list.iterator();
         JSONArray array = new JSONArray();
         String item = null;
         while (iterator.hasNext()) {
             item = (String)iterator.next();
+            Log.d(TAG, "convertListToJsonStr item = " + item);
             array.put(item);
         }
         if (array != null && array.length() > 0) {

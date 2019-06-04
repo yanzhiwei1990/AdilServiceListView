@@ -38,6 +38,10 @@ public class FavListItem extends Item {
         }
     }
 
+    public void setNeedShowIcon(boolean value) {
+        needShowIcon = value;
+    }
+
     @Override
     protected JSONObject getJSONObject() {
         return mJSONObject;

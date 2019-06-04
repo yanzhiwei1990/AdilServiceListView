@@ -32,12 +32,14 @@ public class ItemAdapter extends CommonAdapter<Item> {
     }
 
     public void setDataByPosition(int position, Item item) {
+        super.setDataByPosition(position, item);
         if (mData != null && mData.size() >= position) {
             mData.set(position,item );
         }
     }
 
     public void setAllData(LinkedList<Item> data) {
+        super.setAllData(data);
         mData = data;
     }
 

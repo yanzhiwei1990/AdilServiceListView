@@ -26,5 +26,6 @@
         android:background="@drawable/selector_buttonitem"
         android:gravity="center_vertical"
         android:textSize="@dimen/button_text_size"
+        android:nextFocusRight="@id/red_sort_button"
         android:text="@string/sort_sort" />
 </LinearLayout>
