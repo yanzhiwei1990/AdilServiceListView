@@ -38,6 +38,10 @@ public class FavListItem extends Item {
         }
     }
 
+    public void setJSONObject(JSONObject obj) {
+        mJSONObject = obj;
+    }
+
     public void setNeedShowIcon(boolean value) {
         needShowIcon = value;
     }
@@ -100,11 +104,8 @@ public class FavListItem extends Item {
     public int getFavId() {
         int result = -1;
         try {
-            if (!TextUtils.isEmpty(mInfoJson)) {
-                JSONObject obj =  new JSONObject(mInfoJson);
-                if (obj != null && obj.length() > 0) {
-                    result = obj.getInt(ChannelDataManager.KEY_SETTINGS_FAV_INDEX);
-                }
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_FAV_INDEX);
             }
         } catch (JSONException e) {
             Log.e(TAG, "getChannelId e = " + e.getMessage());
@@ -121,6 +122,54 @@ public class FavListItem extends Item {
             }
         } catch (JSONException e) {
             Log.e(TAG, "isAllFavList e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void setItemType(int type) {
+        try {
+            if (mJSONObject != null) {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE, type);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "setItemType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public int getItemType() {
+        int result = Item.ACTION_CHANNEL_SORT_ALL;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getItemType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void setContainerType(int type) {
+        try {
+            if (mJSONObject != null) {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, type);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "setContainerType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public int getContainerType() {
+        int result = Item.CONTAINER_ITEM_ALL_CHANNEL;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getContainerType e = " + e.getMessage());
             e.printStackTrace();
         }
         return result;

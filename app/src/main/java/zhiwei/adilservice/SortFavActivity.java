@@ -87,10 +87,10 @@ public class SortFavActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //LOG(LOGD, null, "onKeyDown " + event);
         if (KeyEvent.KEYCODE_BACK == keyCode) {
-            if (mRightShowContainner.getVisibility() == View.VISIBLE) {
+            /*if (mRightShowContainner.getVisibility() == View.VISIBLE) {
                 mRightShowContainner.setVisibility(View.GONE);
                 return true;
-            }
+            }*/
         }
         dealAction(getKeyEventAction(keyCode, event));
         return super.onKeyDown(keyCode, event);
@@ -109,6 +109,9 @@ public class SortFavActivity extends Activity {
                 } else if (mSortListView.getVisibility() == View.VISIBLE) {
                     mSortListView.requestFocus();
                 }
+                return true;
+            } else if (mAllListView.hasFocus() || mContentListView.hasFocus() || mSortListView.hasFocus()) {
+                mAllButton.requestFocus();
                 return true;
             }
         }
@@ -175,8 +178,11 @@ public class SortFavActivity extends Activity {
 
     private void dealAction(int action) {
         LOG(LOGD, null, "dealAction = " + action);
+        mCurrentActionId = action;
         switch (action) {
             case ACTION_CHANNEL_SORT_ALL:
+            case ACTION_FUNVTION_FIND:
+                mLeftTitle.setText(R.string.channel_list_all);
                 if (mAllListView.getVisibility() != View.VISIBLE) {
                     mAllListView.setVisibility(View.VISIBLE);
                 }
@@ -194,7 +200,8 @@ public class SortFavActivity extends Activity {
             case ACTION_CHANNEL_SORT_AZ:
             case ACTION_CHANNEL_SORT_TP:
             case ACTION_CHANNEL_SORT_NETWORKID:
-            case ACTION_CHANNEL_SORT_SORT:
+            case ACTION_FUNVTION_SATELLITE:
+                mLeftTitle.setText(R.string.channel_list_all);
                 if (mSortListView.getVisibility() != View.VISIBLE) {
                     mSortListView.setVisibility(View.VISIBLE);
                 }
@@ -209,13 +216,18 @@ public class SortFavActivity extends Activity {
                 }
                 dealActionUI(action);
                 break;
-            case ACTION_FUNVTION_FIND:
-
+            case ACTION_CHANNEL_SORT_SORT:
+                if (mAllListView.getVisibility() == View.VISIBLE || mContentListView.getVisibility() == View.VISIBLE) {
+                    dealActionUI(action);
+                }
                 break;
             case ACTION_FUNVTION_ADD_FAV:
                 mRightTitle.setText(R.string.f2_add_fav);
                 if (mRightShowContainner.getVisibility() != View.VISIBLE) {
                     mRightShowContainner.setVisibility(View.VISIBLE);
+                } else {
+                    mRightShowContainner.setVisibility(View.GONE);
+                    return;
                 }
                 dealActionUI(action);
                 break;
@@ -223,11 +235,11 @@ public class SortFavActivity extends Activity {
                 mRightTitle.setText(R.string.favourite_list);
                 if (mRightShowContainner.getVisibility() != View.VISIBLE) {
                     mRightShowContainner.setVisibility(View.VISIBLE);
+                } else {
+                    mRightShowContainner.setVisibility(View.GONE);
+                    return;
                 }
                 dealActionUI(action);
-                break;
-            case ACTION_FUNVTION_SATELLITE:
-
                 break;
             default:
                 break;
@@ -241,27 +253,72 @@ public class SortFavActivity extends Activity {
                 mLeftTitle.setText(R.string.channel_list_all);
                 mAllListView.updateAllItem(this, mChannelDataManager.getChannelListItem(""));
                 break;
-            case ACTION_CHANNEL_SORT_AZ:
+            case ACTION_CHANNEL_SORT_AZ:{
                 mLeftTitle.setText(R.string.channel_list_all);
-                //mSortListView.updateAllItem(mChannelDataManager.getAZSortKeyList());
-                //mContentListView.updateAllItem(mChannelDataManager.getAZSortChannelList());
+                mSortListView.updateAllItem(this, mChannelDataManager.getAZSortKeyChannelListItem(""));
+                mSortListView.setSelection(0);
+                mSortListView.requestFocus();
+                ItemAdapter adapter = (ItemAdapter) mSortListView.getAdapter();
+                ChannelListItem item = null;
+                String alphabet = null;
+                if (adapter != null && adapter.getCount() > 0) {
+                    item = (ChannelListItem) adapter.getItem(0);
+                }
+                if (item != null) {
+                    alphabet = item.getKey();
+                }
+                mContentListView.updateAllItem(this, mChannelDataManager.getAZSortChannelListItemByStartedAlphabet("", alphabet));
                 break;
-            case ACTION_CHANNEL_SORT_TP:
+            }
+            case ACTION_CHANNEL_SORT_TP: {
                 mLeftTitle.setText(R.string.channel_list_all);
-                //mSortListView.updateAllItem(mChannelDataManager.getTPSortKeyList());
-                //mContentListView.updateAllItem(mChannelDataManager.getTPSortChannelList());
-
+                //mSortListView.updateAllItem(this, mChannelDataManager.getTPSortKeyChannelListItem(""));
+                mSortListView.updateAllItem(this, mChannelDataManager.getFrequencySortKeyChannelListItem(""));
+                mSortListView.setSelection(0);
+                mSortListView.requestFocus();
+                ItemAdapter adapter = (ItemAdapter) mSortListView.getAdapter();
+                ChannelListItem item = null;
+                String tpName = null;
+                if (adapter != null && adapter.getCount() > 0) {
+                    item = (ChannelListItem) adapter.getItem(0);
+                }
+                if (item != null) {
+                    tpName = item.getKey();
+                }
+                //mContentListView.updateAllItem(this, mChannelDataManager.getTPSortChannelListItemByName("", tpName));
+                mContentListView.updateAllItem(this, mChannelDataManager.getFrequencySortChannelListItemByFrequrncy("", Integer.valueOf(tpName)));
                 break;
-            case ACTION_CHANNEL_SORT_NETWORKID:
+            }
+            case ACTION_CHANNEL_SORT_NETWORKID: {
                 mLeftTitle.setText(R.string.channel_list_all);
-                //mSortListView.updateAllItem(mChannelDataManager.getOperatorSortKeyList());
-                //mContentListView.updateAllItem(mChannelDataManager.getOperatorSortChannelList());
+                mSortListView.updateAllItem(this, mChannelDataManager.getOperatorSortKeyChannelListItem(""));
+                mSortListView.setSelection(0);
+                mSortListView.requestFocus();
+                ItemAdapter adapter = (ItemAdapter) mSortListView.getAdapter();
+                ChannelListItem item = null;
+                int operatorId = 0;
+                if (adapter != null && adapter.getCount() > 0) {
+                    item = (ChannelListItem) adapter.getItem(0);
+                }
+                String key = item.getKey();
+                if (item != null && !TextUtils.isEmpty(key)) {
+                    operatorId = Integer.valueOf(item.getKey());
+                }
+                mContentListView.updateAllItem(this, mChannelDataManager.getOperatorSortChannelListItemByNetworkId("", operatorId));
                 break;
+            }
             case ACTION_CHANNEL_SORT_SORT:
+                if (LIST_ALL_CHANNEL.equals(mCurrentEditChannelList)) {
 
+                } else if (LIST_SORT_CONTENT.equals(mCurrentEditChannelList)) {
+
+                }
                 break;
             case ACTION_FUNVTION_FIND:
-
+                mLeftTitle.setText(R.string.channel_list_all);
+                mAllListView.updateAllItem(this, mChannelDataManager.getMatchedSortChannelListItemByName("", ""));
+                mAllListView.setSelection(0);
+                mAllListView.requestFocus();
                 break;
             case ACTION_FUNVTION_ADD_FAV:
                 if (mCurrentEditChannelList != null && mCurrentEditChannelIndex > -1 && mCurrentEditChannelId > -1) {
@@ -277,7 +334,19 @@ public class SortFavActivity extends Activity {
                 break;
             case ACTION_FUNVTION_SATELLITE:
                 mLeftTitle.setText(R.string.channel_list_all);
-                //mAllListView.updateAllItem(mChannelDataManager.getChannelListItem(""));
+                mSortListView.updateAllItem(this, mChannelDataManager.getSatelliteSortKeyChannelListItem(""));
+                mSortListView.setSelection(0);
+                mSortListView.requestFocus();
+                ItemAdapter adapter = (ItemAdapter) mSortListView.getAdapter();
+                ChannelListItem item = null;
+                String satellite = null;
+                if (adapter != null && adapter.getCount() > 0) {
+                    item = (ChannelListItem) adapter.getItem(0);
+                }
+                if (item != null) {
+                    satellite = item.getKey();
+                }
+                mContentListView.updateAllItem(this, mChannelDataManager.getSatelliteSortChannelListItemByName("", satellite));
                 break;
             case ACTION_FUNVTION_FAVLIST:
                 mFavListView.updateAllItem(this, mChannelDataManager.getFavListItem());
@@ -365,18 +434,26 @@ public class SortFavActivity extends Activity {
         mAllListView.setOnItemClickListener(mOnItemClickListener);
         mAllListView.setOnItemSelectedListener(mOnItemSelectedListener);
         mAllListView.setOnFocusChangeListener(mOnItemFocusChangeListener);
+        mAllListView.setListType(CustomedListView.SORT_ALL_LIST);
+        mAllListView.setKeyEventListener(mKeyEventListener);
 
         mSortListView.setOnItemClickListener(mOnItemClickListener);
         mSortListView.setOnItemSelectedListener(mOnItemSelectedListener);
         mSortListView.setOnFocusChangeListener(mOnItemFocusChangeListener);
+        mSortListView.setListType(CustomedListView.SORT_KEY_LIST);
+        mSortListView.setKeyEventListener(mKeyEventListener);
 
         mContentListView.setOnItemClickListener(mOnItemClickListener);
         mContentListView.setOnItemSelectedListener(mOnItemSelectedListener);
         mContentListView.setOnFocusChangeListener(mOnItemFocusChangeListener);
+        mContentListView.setListType(CustomedListView.SORT_KEY_CONTENT_LIST);
+        mContentListView.setKeyEventListener(mKeyEventListener);
 
         mFavListView.setOnItemClickListener(mOnItemClickListener);
         mFavListView.setOnItemSelectedListener(mOnItemSelectedListener);
         mFavListView.setOnFocusChangeListener(mOnItemFocusChangeListener);
+        mFavListView.setListType(CustomedListView.SORT_FAV_LIST);
+        mFavListView.setKeyEventListener(mKeyEventListener);
 
         mAllButton.setOnClickListener(mOnClickListener);
         mAllButton.setOnFocusChangeListener(mOnItemFocusChangeListener);
@@ -427,6 +504,7 @@ public class SortFavActivity extends Activity {
     private String mCurrentFavlList =  LIST_ALL_FAV_LIST;//all or channel fav
     private int mCurrentFavId =  -1;
     private int mCurrentFavIndex =  -1;
+    private int mCurrentActionId =  ACTION_CHANNEL_SORT_ALL;
 
     private AdapterView.OnItemSelectedListener mOnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -436,6 +514,7 @@ public class SortFavActivity extends Activity {
                 switch (parentRes) {
                     case R.id.sort_key:
                         LOG(LOGD, null, "onItemSelected sort_key position = " + position + ", id = " + id);
+                        updateSortKeyChange(parent, parentRes, position);
                         break;
                     case R.id.sort_channel:
                         LOG(LOGD, null, "onItemSelected sort_channel position = " + position + ", id = " + id);
@@ -525,6 +604,61 @@ public class SortFavActivity extends Activity {
                 }
             } else {
                 LOG(LOGD, null, "onItemClick parent null");
+            }
+        }
+    };
+
+    private CustomedListView.KeyEventListener mKeyEventListener = new CustomedListView.KeyEventListener() {
+        @Override
+        public void onKeyEventCallbak(Bundle data) {
+            if (data != null) {
+                String listType = data.getString(CustomedListView.KEY_LIST_TYPE);
+                switch (listType) {
+                    case CustomedListView.SORT_ALL_LIST:
+                        if (KeyEvent.KEYCODE_DPAD_LEFT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+
+                        } else if (KeyEvent.KEYCODE_DPAD_RIGHT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+                            if (mFavListView.getVisibility() == View.VISIBLE && mFavListView.getAdapter() != null && mFavListView.getAdapter().getCount() > 0) {
+                                mFavListView.requestFocus();
+                            }
+                        }
+                        break;
+                    case CustomedListView.SORT_KEY_LIST:
+                        if (KeyEvent.KEYCODE_DPAD_LEFT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+
+                        } else if (KeyEvent.KEYCODE_DPAD_RIGHT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+                            if (mContentListView.getVisibility() == View.VISIBLE && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                mContentListView.requestFocus();
+                            }
+                        }
+                        break;
+                    case CustomedListView.SORT_KEY_CONTENT_LIST:
+                        if (KeyEvent.KEYCODE_DPAD_LEFT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+                            if (mSortListView.getVisibility() == View.VISIBLE && mSortListView.getAdapter() != null && mSortListView.getAdapter().getCount() > 0) {
+                                mSortListView.requestFocus();
+                            }
+                        } else if (KeyEvent.KEYCODE_DPAD_RIGHT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+                            if (mFavListView.getVisibility() == View.VISIBLE && mFavListView.getAdapter() != null && mFavListView.getAdapter().getCount() > 0) {
+                                mFavListView.requestFocus();
+                            }
+                        }
+                        break;
+                    case CustomedListView.SORT_FAV_LIST:
+                        if (KeyEvent.KEYCODE_DPAD_LEFT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+                            if (mAllListView.getVisibility() == View.VISIBLE && mAllListView.getAdapter() != null && mAllListView.getAdapter().getCount() > 0) {
+                                mAllListView.requestFocus();
+                            } else if (mContentListView.getVisibility() == View.VISIBLE && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                mContentListView.requestFocus();
+                            } else if (mSortListView.getVisibility() == View.VISIBLE && mSortListView.getAdapter() != null && mSortListView.getAdapter().getCount() > 0) {
+                                mSortListView.requestFocus();
+                            }
+                        } else if (KeyEvent.KEYCODE_DPAD_RIGHT == data.getInt(CustomedListView.KEY_ACTION_CODE)) {
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     };
@@ -693,6 +827,37 @@ public class SortFavActivity extends Activity {
             }
         }
         LOG(LOGD, null, ("updateEditChannelInfo mCurrentEditChannelList = " + mCurrentEditChannelList + ", mCurrentEditChannelIndex = " + mCurrentEditChannelIndex + ", mCurrentEditChannelId =" + mCurrentEditChannelId));
+    }
+
+    //update when sort key list changed
+    private void updateSortKeyChange(AdapterView<?> parent, int resId, int position) {
+        if (parent instanceof ChannelListListView) {
+            ChannelListItem sortKeyItem = null;
+            ItemAdapter sortKeyAdapter = null;
+            sortKeyItem = (ChannelListItem)parent.getItemAtPosition(position);
+            int sortKeyType;
+            String key =  null;
+            if (sortKeyItem != null) {
+                sortKeyType = sortKeyItem.getItemType();
+                key = sortKeyItem.getKey();
+                switch (sortKeyType) {
+                    case ACTION_CHANNEL_SORT_AZ:
+                        mContentListView.updateAllItem(this, mChannelDataManager.getAZSortChannelListItemByStartedAlphabet("", key));
+                        break;
+                    case ACTION_CHANNEL_SORT_TP:
+                        mContentListView.updateAllItem(this, mChannelDataManager.getTPSortChannelListItemByName("", key));
+                        break;
+                    case ACTION_CHANNEL_SORT_NETWORKID:
+                        mContentListView.updateAllItem(this, mChannelDataManager.getOperatorSortChannelListItemByNetworkId("", Integer.valueOf(key)));
+                        break;
+                    case ACTION_FUNVTION_SATELLITE:
+                        mContentListView.updateAllItem(this, mChannelDataManager.getOperatorSortChannelListItemByNetworkId("", Integer.valueOf(key)));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     private int getButtonClickAction(int buttonRes) {

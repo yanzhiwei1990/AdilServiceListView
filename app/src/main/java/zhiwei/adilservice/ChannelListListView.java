@@ -3,8 +3,10 @@ package zhiwei.adilservice;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 
@@ -12,6 +14,9 @@ import java.util.LinkedList;
 
 public class ChannelListListView extends CustomedListView {
     private static final String TAG = ChannelListListView.class.getSimpleName();
+
+    private KeyEventListener mKeyEventListener;
+    private String mListType = null;
 
     public ChannelListListView(Context context) {
         this(context, null);
@@ -30,6 +35,26 @@ public class ChannelListListView extends CustomedListView {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_RIGHT:{
+                if (mKeyEventListener != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(KEY_ACTION_CODE, keyCode);
+                    bundle.putString(KEY_LIST_TYPE, mListType);
+                    mKeyEventListener.onKeyEventCallbak(bundle);
+                    return true;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         int lastSelectItem = getSelectedItemPosition();
         //super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
@@ -44,6 +69,14 @@ public class ChannelListListView extends CustomedListView {
         } else {
             super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
+    }
+
+    public void setKeyEventListener(KeyEventListener listener) {
+        mKeyEventListener = listener;
+    }
+
+    public void setListType(String type) {
+        mListType = type;
     }
 
     public void updateItem(int position, Item item) {

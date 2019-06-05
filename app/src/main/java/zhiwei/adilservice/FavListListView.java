@@ -3,6 +3,7 @@ package zhiwei.adilservice;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,6 +13,9 @@ import java.util.LinkedList;
 
 public class FavListListView extends CustomedListView {
     private static final String TAG = FavListListView.class.getSimpleName();
+
+    private KeyEventListener mKeyEventListener;
+    private String mListType = null;
 
     public FavListListView(Context context) {
         this(context, null);
@@ -33,8 +37,16 @@ public class FavListListView extends CustomedListView {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                return true;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:{
+                if (mKeyEventListener != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(KEY_ACTION_CODE, keyCode);
+                    bundle.putString(KEY_LIST_TYPE, mListType);
+                    mKeyEventListener.onKeyEventCallbak(bundle);
+                    return true;
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -46,7 +58,9 @@ public class FavListListView extends CustomedListView {
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                return true;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+            case KeyEvent.KEYCODE_DPAD_UP:
+                //return true;
             default:
                 break;
         }
@@ -66,6 +80,14 @@ public class FavListListView extends CustomedListView {
         } else {
             super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
+    }
+
+    public void setKeyEventListener(KeyEventListener listener) {
+        mKeyEventListener = listener;
+    }
+
+    public void setListType(String type) {
+        mListType = type;
     }
 
     public void updateItem(int position, Item item) {

@@ -38,10 +38,12 @@
                 android:cacheColorHint="@android:color/transparent"
                 android:divider="@null"
                 android:listSelector="@drawable/selector_channellistitem"
-                android:nextFocusLeft="@id/red_sort_button"
-                android:nextFocusRight="@id/sort_channel"
-                android:nextFocusUp="@id/f1_button"
-                android:nextFocusDown="@id/red_sort_button"
+                android:nextFocusLeft="@id/sort_key"
+                android:nextFocusRight="@id/sort_key"
+                android:nextFocusUp="@id/sort_key"
+                android:nextFocusDown="@id/sort_key"
+                android:scrollbarFadeDuration="0"
+                android:fadeScrollbars="true"
                 android:visibility="gone" />
 
             <zhiwei.adilservice.ChannelListListView
@@ -52,10 +54,12 @@
                 android:cacheColorHint="@android:color/transparent"
                 android:divider="@null"
                 android:listSelector="@drawable/selector_channellistitem"
-                android:nextFocusLeft="@id/sort_key"
-                android:nextFocusRight="@id/sort_sort_button"
-                android:nextFocusUp="@id/f4_button"
-                android:nextFocusDown="@id/sort_sort_button"
+                android:nextFocusLeft="@id/sort_channel"
+                android:nextFocusRight="@id/sort_channel"
+                android:nextFocusUp="@id/sort_channel"
+                android:nextFocusDown="@id/sort_channel"
+                android:scrollbarFadeDuration="0"
+                android:fadeScrollbars="true"
                 android:visibility="gone" />
 
             <zhiwei.adilservice.ChannelListListView
@@ -66,10 +70,12 @@
                 android:cacheColorHint="@android:color/transparent"
                 android:divider="@null"
                 android:listSelector="@drawable/selector_channellistitem"
-                android:nextFocusLeft="@id/red_sort_button"
-                android:nextFocusRight="@id/sort_sort_button"
-                android:nextFocusUp="@id/f1_button"
-                android:nextFocusDown="@id/red_sort_button"
+                android:nextFocusLeft="@id/sort_channel_all"
+                android:nextFocusRight="@id/sort_channel_all"
+                android:nextFocusUp="@id/sort_channel_all"
+                android:nextFocusDown="@id/sort_channel_all"
+                android:scrollbarFadeDuration="0"
+                android:fadeScrollbars="true"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -182,7 +188,12 @@
                 android:cacheColorHint="@android:color/transparent"
                 android:divider="@null"
                 android:listSelector="@drawable/selector_favlistitem"
-                android:nextFocusLeft="@id/channel_container" />
+                android:nextFocusLeft="@id/favourite"
+                android:nextFocusRight="@id/favourite"
+                android:nextFocusUp="@id/favourite"
+                android:nextFocusDown="@id/favourite"
+                android:scrollbarFadeDuration="0"
+                android:fadeScrollbars="true"/>
         </LinearLayout>
 
     </LinearLayout>

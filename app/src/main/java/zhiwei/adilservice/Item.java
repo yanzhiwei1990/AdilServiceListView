@@ -11,6 +11,22 @@ public abstract class Item {
     private static final String TAG = "Item";
     private String mItemName;
 
+    public static final int ACTION_CHANNEL_SORT_ALL = 0;
+    public static final int ACTION_CHANNEL_SORT_AZ = 1;
+    public static final int ACTION_CHANNEL_SORT_TP = 2;
+    public static final int ACTION_CHANNEL_SORT_NETWORKID = 3;
+    public static final int ACTION_CHANNEL_SORT_SORT = 4;
+    public static final int ACTION_FUNVTION_FIND = 5;
+    public static final int ACTION_FUNVTION_ADD_FAV = 6;
+    public static final int ACTION_FUNVTION_SATELLITE = 7;
+    public static final int ACTION_FUNVTION_FAVLIST = 8;
+
+    public static final int CONTAINER_ITEM_ALL_CHANNEL = 0;
+    public static final int CONTAINER_ITEM_SORT_CONTENT = 1;
+    public static final int CONTAINER_ITEM_SORT_KEY = 2;
+    public static final int CONTAINER_ITEM_ALL_FAV = 3;
+    public static final int CONTAINER_ITEM_CHANNEL_FAV = 3;
+
     public Item(String name) {
         this.mItemName = name;
     }

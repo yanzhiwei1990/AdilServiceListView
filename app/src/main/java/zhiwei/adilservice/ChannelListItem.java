@@ -58,6 +58,21 @@ public class ChannelListItem extends Item {
         return mName;
     }
 
+    public void setTitle(String value) {
+        mName = value;
+        if (mJSONObject != null) {
+            try {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_NAME, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setJSONObject(JSONObject obj) {
+        mJSONObject = obj;
+    }
+
     @Override
     protected boolean isNeedShowIcon() {
         return mNeedShowIcon;
@@ -145,7 +160,9 @@ public class ChannelListItem extends Item {
         }
         result = array.toString();
         try {
-            mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX, result);
+            if (mJSONObject != null) {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX, result);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -155,7 +172,9 @@ public class ChannelListItem extends Item {
     public String getFavArrayJsonStr() {
         String result = null;
         try {
-            result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+            if (mJSONObject != null) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FAV_INDEX);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -166,12 +185,123 @@ public class ChannelListItem extends Item {
         long result = -1;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
-                if (mJSONObject != null && mJSONObject.length() > 0) {
-                    result = mJSONObject.getLong(ChannelDataManager.KEY_SETTINGS_CHANNEL_ID);
-                }
+                result = mJSONObject.getLong(ChannelDataManager.KEY_SETTINGS_CHANNEL_ID);
             }
         } catch (JSONException e) {
             Log.e(TAG, "getChannelId e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getTranponder() {
+        String result = null;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_FREQUENCY);//use frequency first
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getTranponder e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getSatellite() {
+        String result = null;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_SATELLITE);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getSatellite e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getFrequency() {
+        int result = -1;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_FREQUENCY);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getFrequency e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getNetworkId() {
+        int result = -1;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_NETWORK_ID);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getNetworkId e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void setItemType(int type) {
+        try {
+            if (mJSONObject != null) {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE, type);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "setItemType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public int getItemType() {
+        int result = Item.ACTION_CHANNEL_SORT_ALL;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getItemType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void setContainerType(int type) {
+        try {
+            if (mJSONObject != null) {
+                mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, type);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "setContainerType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public int getContainerType() {
+        int result = Item.CONTAINER_ITEM_ALL_CHANNEL;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getContainerType e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getKey() {
+        String result = null;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_KEY);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "getContainerType e = " + e.getMessage());
             e.printStackTrace();
         }
         return result;
