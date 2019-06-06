@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 
@@ -56,6 +57,7 @@ public class SortFavActivity extends Activity {
     private Button mFavListButton;
 
     private ChannelDataManager mChannelDataManager;
+    private CustomedDialogView mCustomedDialogView;
 
     private static final int CONNECT = 0;
     private Handler mHandler = new Handler() {
@@ -338,17 +340,19 @@ public class SortFavActivity extends Activity {
                 break;
             }
             case ACTION_CHANNEL_SORT_SORT:
-                if (LIST_ALL_CHANNEL.equals(mCurrentEditChannelList)) {
+                /*if (LIST_ALL_CHANNEL.equals(mCurrentEditChannelList)) {
 
                 } else if (LIST_SORT_CONTENT.equals(mCurrentEditChannelList)) {
 
-                }
+                }*/
+                mCustomedDialogView.creatSortOrderDialog().show();
                 break;
             case ACTION_FUNVTION_FIND:
-                mLeftTitle.setText(R.string.channel_list_all);
+                mLeftTitle.setText(R.string.channel_search_result);
                 mAllListView.updateAllItem(this, mChannelDataManager.getMatchedSortChannelListItemByName("", ""));
                 mAllListView.setSelection(0);
                 mAllListView.requestFocus();
+                mCustomedDialogView.creatSeachChannelDialog().show();
                 break;
             case ACTION_FUNVTION_ADD_FAV:
                 if (mRightShowContainner.getVisibility() == View.VISIBLE && mCurrentEditChannelList != null && mCurrentEditChannelIndex > -1 && mCurrentEditChannelId > -1) {
@@ -458,6 +462,7 @@ public class SortFavActivity extends Activity {
         mRightShowContainner.setVisibility(View.GONE);
         //mFavListView.setVisibility(View.GONE);
 
+        mCustomedDialogView = new CustomedDialogView(this, mDialogCallback);
         setListener();
         /*mAllListView.setSelection(2);
         mFavListView.setSelection(5);
@@ -781,6 +786,58 @@ public class SortFavActivity extends Activity {
             if (v != null) {
                 int buttonRes = v.getId();
                 dealAction(getButtonClickAction(buttonRes));
+            }
+        }
+    };
+
+    private CustomedDialogView.DialogCallback mDialogCallback = new CustomedDialogView.DialogCallback() {
+        @Override
+        public void onDialogEvent(Bundle bundle) {
+            if (bundle != null) {
+                if (bundle.getBoolean(CustomedDialogView.DIALOG_ACTION)) {
+                    if (CustomedDialogView.DIALOG_ACTION_SORT_LIST_CLICKED.equals(bundle.getString(CustomedDialogView.DIALOG_EVENT))) {
+                        int flag = bundle.getInt(CustomedDialogView.DIALOG_LIST_POSITION, -1);
+                        if (flag > -1) {
+                            if (mAllListView.getVisibility() == View.VISIBLE && mAllListView.getAdapter() != null && mAllListView.getAdapter().getCount() > 0) {
+                                LinkedList<Item> allData = ((ItemAdapter)mAllListView.getAdapter()).getAllData();
+                                //int position = mAllListView.getPositionForView(mAllListView.getSelectedView());
+                                switch (flag) {
+                                    case CustomedDialogView.FLAG_SORT_ITEM_AZ:
+                                        allData = mChannelDataManager.getAZSortedItemList(allData);
+                                        break;
+                                    case CustomedDialogView.FLAG_SORT_ITEM_ZA:
+                                        allData = mChannelDataManager.getZASortedItemList(allData);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                mAllListView.updateAllItem(SortFavActivity.this, allData);
+                                //mAllListView.setSelection(position);
+                            } else if (mContentListView.getVisibility() == View.VISIBLE && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                LinkedList<Item> allData = ((ItemAdapter)mContentListView.getAdapter()).getAllData();
+                                switch (flag) {
+                                    case CustomedDialogView.FLAG_SORT_ITEM_AZ:
+                                        allData = mChannelDataManager.getAZSortedItemList(allData);
+                                        break;
+                                    case CustomedDialogView.FLAG_SORT_ITEM_ZA:
+                                        allData = mChannelDataManager.getZASortedItemList(allData);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                mContentListView.updateAllItem(SortFavActivity.this, allData);
+                                //mContentListView.setSelection(0);
+                            }
+                        }
+                    } else if (CustomedDialogView.DIALOG_ACTION_SEARCH_BUTTON_CLICKED.equals(bundle.getString(CustomedDialogView.DIALOG_EVENT)) ||
+                            CustomedDialogView.DIALOG_ACTION_SEARCH_CONTENT_CHANGED.equals(bundle.getString(CustomedDialogView.DIALOG_EVENT))) {
+                        String matchKey = bundle.getString(CustomedDialogView.DIALOG_ACTION_SEARCH_VALUE);
+                        if (mAllListView.getVisibility() == View.VISIBLE) {
+                            mAllListView.updateAllItem(SortFavActivity.this, mChannelDataManager.getMatchedSortChannelListItemByName("", matchKey));
+                            mAllListView.setSelection(0);
+                        }
+                    }
+                }
             }
         }
     };

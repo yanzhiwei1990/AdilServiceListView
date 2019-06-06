@@ -3,6 +3,7 @@
 
     <string name="sort_all">All</string>
     <string name="sort_a_z">A-Z</string>
+    <string name="sort_z_a">Z-A</string>
     <string name="sort_tp">TP</string>
     <string name="sort_network">NetWork Id</string>
     <string name="sort_sort">Sort</string>
@@ -17,4 +18,6 @@
     <string name="f4_favourite_list">Favourite List</string>
     <string name="favourite_list">Favourite List</string>
     <string name="channel_list_all">ALL TV</string>
+    <string name="channel_search">Search</string>
+    <string name="channel_search_result">Search Result</string>
 </resources>

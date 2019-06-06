@@ -39,6 +39,7 @@ public abstract class Item {
     protected abstract String getLayoutIdInfo();
     protected abstract JSONObject getJSONObject();
     protected abstract boolean isNeedShowIcon();
+    protected abstract String getOriginTitle();
 
     protected String getStringValueFromJSONObject(String key) {
         String result = null;

@@ -42,6 +42,18 @@ public class FavListItem extends Item {
         mJSONObject = obj;
     }
 
+    public String getOriginTitle() {
+        String result = null;
+        try {
+            if (mJSONObject != null) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_NAME);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public void setNeedShowIcon(boolean value) {
         needShowIcon = value;
     }

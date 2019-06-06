@@ -26,6 +26,10 @@ public class SortListItem extends Item {
         return null;
     }
 
+    public String getOriginTitle() {
+        return mName;
+    }
+
     @Override
     protected int getResourceId() {
         return R.layout.item_sortlist_layout;

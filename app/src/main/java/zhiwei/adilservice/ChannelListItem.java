@@ -58,15 +58,27 @@ public class ChannelListItem extends Item {
         return mName;
     }
 
+    public String getOriginTitle() {
+        String result = null;
+        try {
+            if (mJSONObject != null) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_CHANNEL_NAME);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public void setTitle(String value) {
         mName = value;
-        if (mJSONObject != null) {
+        /*if (mJSONObject != null) {
             try {
                 mJSONObject.put(ChannelDataManager.KEY_SETTINGS_CHANNEL_NAME, value);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     public void setJSONObject(JSONObject obj) {

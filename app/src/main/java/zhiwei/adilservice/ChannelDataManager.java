@@ -959,4 +959,36 @@ public class ChannelDataManager {
             return sortedMap;
         }
     }
+
+    public LinkedList<Item> getAZSortedItemList(LinkedList<Item> list) {
+        LinkedList<Item> result = new LinkedList<Item>();
+        if (list != null && list.size() > 0) {
+            Collections.sort(list, new ItemAZComparator());
+            result = list;
+        }
+        return result;
+    }
+
+    public LinkedList<Item> getZASortedItemList(LinkedList<Item> list) {
+        LinkedList<Item> result = new LinkedList<Item>();
+        if (list != null && list.size() > 0) {
+            Collections.sort(list, new ItemZAComparator());
+            result = list;
+        }
+        return result;
+    }
+
+    public class ItemAZComparator implements Comparator<Item> {
+        @Override
+        public int compare(Item me1, Item me2) {
+            return me1.getOriginTitle().compareTo(me2.getOriginTitle());
+        }
+    }
+
+    public class ItemZAComparator implements Comparator<Item> {
+        @Override
+        public int compare(Item me1, Item me2) {
+            return me2.getOriginTitle().compareTo(me1.getOriginTitle());
+        }
+    }
 }
