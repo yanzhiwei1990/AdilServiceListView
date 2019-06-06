@@ -102,8 +102,10 @@ public class ChannelDataManager {
         String jsonStr = getStringFromXml(KEY_SETTINGS_CHANNELLIST, null);
         if (TextUtils.isEmpty(jsonStr)) {
             result = initTestChannelList();
+            Log.d(TAG, "getChannelList init");
         } else {
             result = produceListFromJsonStr(jsonStr);
+            Log.d(TAG, "getChannelList from data");
         }
         return result;
     }
@@ -132,6 +134,7 @@ public class ChannelDataManager {
                             result.add(item);
                         }
                     } catch (JSONException e) {
+                        Log.d(TAG, "getChannelListItemWithoutIndex JSONException = " + e);
                         e.printStackTrace();
                     }
                 }
@@ -166,6 +169,7 @@ public class ChannelDataManager {
                             count++;
                         }
                     } catch (JSONException e) {
+                        Log.d(TAG, "getChannelListItem JSONException = " + e);
                         e.printStackTrace();
                     }
                 }
@@ -189,6 +193,7 @@ public class ChannelDataManager {
             obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_AZ);
             obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_KEY);
         } catch (JSONException e) {
+            Log.d(TAG, "getAZSortKeyChannelListItem JSONException1 = " + e);
             e.printStackTrace();
         }
         item = new ChannelListItem(mContext, "ALL", false, obj.toString());
@@ -202,6 +207,7 @@ public class ChannelDataManager {
                 obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_AZ);
                 obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_KEY);
             } catch (JSONException e) {
+                Log.d(TAG, "getAZSortKeyChannelListItem JSONException2 = " + e);
                 e.printStackTrace();
             }
             item = new ChannelListItem(mContext, new String(A), false, obj.toString());
@@ -243,6 +249,7 @@ public class ChannelDataManager {
                         obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_AZ);
                         obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                     } catch (JSONException e) {
+                        Log.d(TAG, "getAZSortChannelListItemByStartedAlphabet JSONException = " + e);
                         e.printStackTrace();
                     }
                     singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -281,6 +288,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_TP);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_KEY);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getTPSortKeyChannelListItem JSONException = " + e);
                     e.printStackTrace();
                 }
 
@@ -296,7 +304,7 @@ public class ChannelDataManager {
         if (TextUtils.isEmpty(name)) {
             return result;
         }
-        LinkedList<Item> list = getChannelListItem(inputId);
+        LinkedList<Item> list = getChannelListItemWithoutIndex(inputId);
         Iterator<Item> itemList = list.iterator();
         ChannelListItem singleItem = null;
         String singleName = null;
@@ -312,6 +320,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_TP);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getTPSortChannelListItemByName JSONException = " + e);
                     e.printStackTrace();
                 }
                 singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -333,6 +342,7 @@ public class ChannelDataManager {
         while (channelList.hasNext()) {
             item = (ChannelListItem)channelList.next();
             tpName = item.getSatellite();
+            //Log.d(TAG, "getSatelliteSortKeyChannelListItem tpName = " + tpName);
             if (!TextUtils.isEmpty(tpName)) {
                 map.put(tpName, tpName);
             }
@@ -349,6 +359,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_FUNVTION_SATELLITE);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_KEY);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getSatelliteSortKeyChannelListItem JSONException = " + e);
                     e.printStackTrace();
                 }
 
@@ -364,7 +375,7 @@ public class ChannelDataManager {
         if (TextUtils.isEmpty(name)) {
             return result;
         }
-        LinkedList<Item> list = getChannelListItem(inputId);
+        LinkedList<Item> list = getChannelListItemWithoutIndex(inputId);
         Iterator<Item> itemList = list.iterator();
         ChannelListItem singleItem = null;
         String singleName = null;
@@ -380,6 +391,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_FUNVTION_SATELLITE);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getSatelliteSortChannelListItemByName JSONException = " + e);
                     e.printStackTrace();
                 }
                 singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -417,6 +429,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_TP);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_KEY);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getFrequencySortKeyChannelListItem JSONException = " + e);
                     e.printStackTrace();
                 }
                 item = new ChannelListItem(mContext, key + "MHz", false, obj.toString());
@@ -428,7 +441,7 @@ public class ChannelDataManager {
 
     public LinkedList<Item> getFrequencySortChannelListItemByFrequrncy(String inputId, int freq) {
         LinkedList<Item> result = new LinkedList<Item>();
-        LinkedList<Item> list = getChannelListItem(inputId);
+        LinkedList<Item> list = getChannelListItemWithoutIndex(inputId);
         Iterator<Item> itemList = list.iterator();
         ChannelListItem singleItem = null;
         int singleFreq = -1;
@@ -444,6 +457,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_TP);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getFrequencySortChannelListItemByFrequrncy JSONException = " + e);
                     e.printStackTrace();
                 }
                 singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -479,6 +493,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_NETWORKID);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getOperatorSortKeyChannelListItem JSONException = " + e);
                     e.printStackTrace();
                 }
                 item = new ChannelListItem(mContext, "Operator Id:" + key, false, obj.toString());
@@ -490,7 +505,7 @@ public class ChannelDataManager {
 
     public LinkedList<Item> getOperatorSortChannelListItemByNetworkId(String inputId, int networkId) {
         LinkedList<Item> result = new LinkedList<Item>();
-        LinkedList<Item> list = getChannelListItem(inputId);
+        LinkedList<Item> list = getChannelListItemWithoutIndex(inputId);
         Iterator<Item> itemList = list.iterator();
         ChannelListItem singleItem = null;
         int singlenetworkId = -1;
@@ -506,6 +521,7 @@ public class ChannelDataManager {
                     obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_NETWORKID);
                     obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_SORT_CONTENT);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getOperatorSortChannelListItemByNetworkId JSONException = " + e);
                     e.printStackTrace();
                 }
                 singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -521,7 +537,7 @@ public class ChannelDataManager {
         if (TextUtils.isEmpty(name)) {
             return result;
         }
-        LinkedList<Item> list = getChannelListItem(inputId);
+        LinkedList<Item> list = getChannelListItemWithoutIndex(inputId);
         Iterator<Item> itemList = list.iterator();
         ChannelListItem singleItem = null;
         String singleName = null;
@@ -540,6 +556,7 @@ public class ChannelDataManager {
                         obj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_CHANNEL_SORT_ALL);
                         obj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_ALL_CHANNEL);
                     } catch (JSONException e) {
+                        Log.d(TAG, "getMatchedSortChannelListItemByName JSONException = " + e);
                         e.printStackTrace();
                     }
                     singleItem = new ChannelListItem(mContext, (String.valueOf(count) + "    " + singleItem.getTitle()), singleItem.isNeedShowIcon(), obj.toString());
@@ -550,58 +567,6 @@ public class ChannelDataManager {
         }
         return result;
     }
-
-    /*public LinkedList<Item> getAZSortChannelListItem(String inputId) {
-        LinkedList<Item> result = new LinkedList<Item>();
-        LinkedList<Item> list = getChannelListItem(inputId);
-        JSONObject allObj = new JSONObject();
-        JSONArray singleArray = null;
-        String singleName = null;
-        String singleStartAlphabet = null;
-        ChannelListItem singleItem = null;
-        LinkedList<Item> singleLinkedList = null;
-        byte[] A = new byte[1];
-        String sortKey = "ALL";
-        try {
-            allObj.put("ALL", list);
-            Iterator<Item> itemList = list.iterator();
-            while (itemList.hasNext()) {
-                singleArray = null;
-                singleName = null;
-                singleStartAlphabet = null;
-                singleItem = null;
-                singleItem = (ChannelListItem)itemList.next();
-                singleName = singleItem.getTitle();
-                if (singleName != null && singleName.length() > 0) {
-                    singleStartAlphabet = singleName.substring(0, 1);
-                }
-                if (singleStartAlphabet != null ) {
-                    singleStartAlphabet = singleStartAlphabet.toUpperCase();
-                    if (allObj.has(singleStartAlphabet)) {
-                        singleLinkedList = (LinkedList<Item>)allObj.get(singleStartAlphabet);
-                        singleLinkedList.add(singleItem);
-                        allObj.put(singleStartAlphabet, singleLinkedList);
-                    } else {
-
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < 27; i++) {
-            try {
-                if (i == 0) {
-                    allObj.put(sortKey, list);
-                } else {
-                    A[0] = (byte)('A' + (byte)(i - 1));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }*/
 
     public String genarateUpdatedChannelListJsonSrt(final List<String> all, long channelId, String favArrayString) {
         String result = null;
@@ -621,6 +586,7 @@ public class ChannelDataManager {
                         }
                     }
                 } catch (JSONException e) {
+                    Log.d(TAG, "genarateUpdatedChannelListJsonSrt JSONException = " + e);
                     e.printStackTrace();
                 }
                 count++;
@@ -644,6 +610,7 @@ public class ChannelDataManager {
                 }
             }
         } catch (JSONException e) {
+            Log.d(TAG, "getFavInfoFromChannel JSONException = " + e);
             e.printStackTrace();
         }
         return result;
@@ -688,6 +655,7 @@ public class ChannelDataManager {
                 try {
                     result.add(initArray.getJSONObject(i).getString(KEY_SETTINGS_FAV_NAME));
                 } catch (JSONException e) {
+                    Log.d(TAG, "getInit64FavList JSONException = " + e);
                     e.printStackTrace();
                 }
             }
@@ -732,6 +700,7 @@ public class ChannelDataManager {
                     item = new FavListItem(mContext, obj.getString(KEY_SETTINGS_FAV_NAME), obj.getBoolean(KEY_SETTINGS_FAV_IS_ADDED), obj.toString());
                     result.add(item);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getFavListItem JSONException = " + e);
                     e.printStackTrace();
                 }
             }
@@ -764,6 +733,7 @@ public class ChannelDataManager {
             try {
                 initArray = new JSONArray(jsonStr);
             } catch (JSONException e) {
+                Log.d(TAG, "getChannelFavListItem JSONException1 = " + e);
                 e.printStackTrace();
             }
         }
@@ -785,6 +755,7 @@ public class ChannelDataManager {
                     item = new FavListItem(mContext, obj.getString(KEY_SETTINGS_FAV_NAME), isFavSelected, obj.toString());
                     result.add(item);
                 } catch (JSONException e) {
+                    Log.d(TAG, "getChannelFavListItem JSONException2 = " + e);
                     e.printStackTrace();
                 }
             }
@@ -821,6 +792,7 @@ public class ChannelDataManager {
                         }
                     }
                 } catch (JSONException e) {
+                    Log.d(TAG, "getChannelItemByFavPage JSONException = " + e);
                     e.printStackTrace();
                 }
             }
@@ -858,7 +830,7 @@ public class ChannelDataManager {
         String item = null;
         while (iterator.hasNext()) {
             item = (String)iterator.next();
-            Log.d(TAG, "convertListToJsonStr item = " + item);
+            //Log.d(TAG, "convertListToJsonStr item = " + item);
             array.put(item);
         }
         if (array != null && array.length() > 0) {
@@ -909,6 +881,9 @@ public class ChannelDataManager {
                 tmpEntry = iter.next();
                 sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
             }
+            /*for (Map.Entry<String, String> mapping : sortedMap.entrySet()) {
+                Log.d(TAG,"MapKeyAscendComparator->" + mapping.getKey() + " ：" + mapping.getValue());
+            }*/
             return sortedMap;
         }
     }
@@ -955,6 +930,9 @@ public class ChannelDataManager {
                 tmpEntry = iter.next();
                 sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
             }
+            /*for (Map.Entry<String, Integer> mapping : sortedMap.entrySet()) {
+                Log.d(TAG,"MapValueAscendComparator->" + mapping.getKey() + " ：" + mapping.getValue());
+            }*/
             return sortedMap;
         }
     }
@@ -981,86 +959,4 @@ public class ChannelDataManager {
             return sortedMap;
         }
     }
-
-    /*public class MapKeyAscendComparator implements Comparator<String> {
-        @Override
-        public int compare(String str1, String str2) {
-            return str1.compareTo(str2);
-        }
-
-        public Map<String, String> sortMapByKey(Map<String, String> map) {
-            if (map == null || map.isEmpty()) {
-                return null;
-            }
-            Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyAscendComparator());
-            sortMap.putAll(map);
-            return sortMap;
-        }
-    }
-
-    public class MapKeyDescendComparator implements Comparator<String> {
-        @Override
-        public int compare(String str1, String str2) {
-            return str2.compareTo(str1);
-        }
-
-        public Map<String, String> sortMapByKey(Map<String, String> map) {
-            if (map == null || map.isEmpty()) {
-                return null;
-            }
-            Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyDescendComparator());
-            sortMap.putAll(map);
-            return sortMap;
-        }
-    }
-
-    public class MapValueAscendComparator implements Comparator<Map.Entry<String, Integer>> {
-        @Override
-        public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2) {
-            return me1.getValue().compareTo(me2.getValue());
-        }
-
-        public Map<String, Integer> sortMapByValue(Map<String, Integer> oriMap) {
-            if (oriMap == null || oriMap.isEmpty()) {
-                return null;
-            }
-            Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-            List<Map.Entry<String, Integer>> entryList = new ArrayList<Map.Entry<String, Integer>>(
-                    oriMap.entrySet());
-            Collections.sort(entryList, new MapValueAscendComparator());
-
-            Iterator<Map.Entry<String, Integer>> iter = entryList.iterator();
-            Map.Entry<String, Integer> tmpEntry = null;
-            while (iter.hasNext()) {
-                tmpEntry = iter.next();
-                sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
-            }
-            return sortedMap;
-        }
-    }
-
-    public class MapValueDescendComparator implements Comparator<Map.Entry<String, Integer>> {
-        @Override
-        public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2) {
-            return me1.getValue().compareTo(me2.getValue());
-        }
-
-        public Map<String, Integer> sortMapByValue(Map<String, Integer> oriMap) {
-            if (oriMap == null || oriMap.isEmpty()) {
-                return null;
-            }
-            Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-            List<Map.Entry<String, Integer>> entryList = new ArrayList<Map.Entry<String, Integer>>(
-                    oriMap.entrySet());
-            Collections.sort(entryList, new MapValueDescendComparator());
-
-            Iterator<Map.Entry<String, Integer>> iter = entryList.iterator();
-            Map.Entry<String, Integer> tmpEntry = null;
-            while (iter.hasNext()) {
-                tmpEntry = iter.next();
-                sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
-            }
-            return sortedMap;
-        }
-    }*/
 }

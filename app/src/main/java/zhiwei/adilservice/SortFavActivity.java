@@ -223,21 +223,51 @@ public class SortFavActivity extends Activity {
                 break;
             case ACTION_FUNVTION_ADD_FAV:
                 mRightTitle.setText(R.string.f2_add_fav);
-                if (mRightShowContainner.getVisibility() != View.VISIBLE) {
-                    mRightShowContainner.setVisibility(View.VISIBLE);
+                if (mAllListView.getVisibility() == View.VISIBLE && !mAllListView.hasFocus() && mAllListView.getAdapter() != null && mAllListView.getAdapter().getCount() > 0) {
+                    //Log.d(TAG, "dealAction --- " + mAllListView.getSelectedView() + ", position = " + mAllListView.getPositionForView(mAllListView.getSelectedView()));
+                    updateEditChannelInfo(mAllListView, R.id.sort_channel_all, mAllListView.getPositionForView(mAllListView.getSelectedView()));
+                } else if (mContentListView.getVisibility() == View.VISIBLE && !mContentListView.hasFocus() && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                    //Log.d(TAG, "dealAction --- " + mContentListView.getSelectedView() + ", item = " + mContentListView.getSelectedItem() + ", position = " + mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                    updateEditChannelInfo(mContentListView, R.id.sort_channel, mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                } else if (mAllListView.hasFocus() || mContentListView.hasFocus()) {
+                    Log.d(TAG, "dealAction edit channel updated");
                 } else {
-                    mRightShowContainner.setVisibility(View.GONE);
+                    mCurrentEditChannelList = null;
+                    mCurrentEditChannelIndex = -1;
+                    mCurrentEditChannelId = -1;
+                    if (mRightShowContainner.getVisibility() == View.VISIBLE) {
+                        mRightShowContainner.setVisibility(View.GONE);
+                    }
+                    Log.d(TAG, "dealAction ACTION_FUNVTION_ADD_FAV none selected edit channel");
                     return;
+                }
+                if (LIST_ALL_FAV_LIST.equals(mCurrentFavlList)) {
+                    if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                        mRightShowContainner.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                        mRightShowContainner.setVisibility(View.VISIBLE);
+                    } else {
+                        mRightShowContainner.setVisibility(View.GONE);
+                        return;
+                    }
                 }
                 dealActionUI(action);
                 break;
             case ACTION_FUNVTION_FAVLIST:
                 mRightTitle.setText(R.string.favourite_list);
-                if (mRightShowContainner.getVisibility() != View.VISIBLE) {
-                    mRightShowContainner.setVisibility(View.VISIBLE);
+                if (LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList)) {
+                    if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                        mRightShowContainner.setVisibility(View.VISIBLE);
+                    }
                 } else {
-                    mRightShowContainner.setVisibility(View.GONE);
-                    return;
+                    if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                        mRightShowContainner.setVisibility(View.VISIBLE);
+                    } else {
+                        mRightShowContainner.setVisibility(View.GONE);
+                        return;
+                    }
                 }
                 dealActionUI(action);
                 break;
@@ -321,14 +351,17 @@ public class SortFavActivity extends Activity {
                 mAllListView.requestFocus();
                 break;
             case ACTION_FUNVTION_ADD_FAV:
-                if (mCurrentEditChannelList != null && mCurrentEditChannelIndex > -1 && mCurrentEditChannelId > -1) {
+                if (mRightShowContainner.getVisibility() == View.VISIBLE && mCurrentEditChannelList != null && mCurrentEditChannelIndex > -1 && mCurrentEditChannelId > -1) {
+                    ItemAdapter adapter = null;
                     if (TextUtils.equals(mCurrentEditChannelList, LIST_ALL_CHANNEL)) {
-                        ItemAdapter adapter = (ItemAdapter)mAllListView.getAdapter();
-                        if (adapter != null && adapter.getCount() > 0 && adapter.getCount() > mCurrentEditChannelIndex) {
-                            mFavListView.updateAllItem(this, mChannelDataManager.getChannelFavListItem((ChannelListItem)adapter.getItem(mCurrentEditChannelIndex)));
-                            mFavListView.requestFocus();
-                            mFavListView.setSelection(0);
-                        }
+                        adapter = (ItemAdapter)mAllListView.getAdapter();
+                    } else if (TextUtils.equals(mCurrentEditChannelList, LIST_SORT_CONTENT)) {
+                        adapter = (ItemAdapter)mContentListView.getAdapter();
+                    }
+                    if (adapter != null && adapter.getCount() > 0 && adapter.getCount() > mCurrentEditChannelIndex) {
+                        mFavListView.updateAllItem(this, mChannelDataManager.getChannelFavListItem((ChannelListItem)adapter.getItem(mCurrentEditChannelIndex)));
+                        mFavListView.requestFocus();
+                        mFavListView.setSelection(0);
                     }
                 }
                 break;
@@ -412,6 +445,9 @@ public class SortFavActivity extends Activity {
         ItemAdapter adapter = null;
         adapter = new ItemAdapter(mChannelDataManager.getChannelListItem("adtv"), this, ChannelListItem.class.getSimpleName());
         mAllListView.setAdapter(adapter);
+        if (adapter != null && adapter.getCount() > 0) {
+            mAllListView.requestFocus();
+        }
 
         mAllListView.setVisibility(View.VISIBLE);
         mSortListView.setVisibility(View.GONE);
@@ -751,7 +787,7 @@ public class SortFavActivity extends Activity {
 
     //update by select channel fav
     private void updateChannelFavInfo(AdapterView<?> parent, int resId, int position) {
-        if (parent instanceof FavListListView) {
+        if (parent != null && parent instanceof FavListListView) {
             FavListItem favItem = null;
             ItemAdapter favAdapter = null;
             boolean isAllFav = true;
@@ -777,7 +813,7 @@ public class SortFavActivity extends Activity {
                         String updateChannel = mChannelDataManager.genarateUpdatedChannelListJsonSrt(mChannelDataManager.getChannelList(""), channelItem.getChannelId(), channelItem.getFavArrayJsonStr());
                         mChannelDataManager.updateChannelListChangeToDatabase(updateChannel);
                     } else if (TextUtils.equals(mCurrentEditChannelList, LIST_SORT_CONTENT)) {
-                        ItemAdapter adapter = (ItemAdapter)(mAllListView.getAdapter());
+                        ItemAdapter adapter = (ItemAdapter)(mContentListView.getAdapter());
                         ChannelListItem channelItem = (ChannelListItem)(adapter.getItem(mCurrentEditChannelIndex));
                         channelItem.getUpdateFavAllIndexArrayString(isSelectedFav, favId);
                         mContentListView.updateItem(mCurrentEditChannelIndex, channelItem);
@@ -817,12 +853,20 @@ public class SortFavActivity extends Activity {
                 return;
         }
         mCurrentEditChannelIndex = position;
-        if (parent instanceof ChannelListListView) {
-            Object obj = parent.getItemAtPosition(position);
-            if (obj instanceof ChannelListItem) {
-                ChannelListItem item = (ChannelListItem)obj;
-                if (item != null) {
-                    mCurrentEditChannelId = item.getChannelId();
+        if (parent != null && parent instanceof ChannelListListView) {
+            ChannelListItem item = (ChannelListItem)parent.getItemAtPosition(position);
+            mCurrentEditChannelId = item.getChannelId();
+            if (mRightShowContainner.getVisibility() == View.VISIBLE && mCurrentEditChannelList != null && mCurrentEditChannelIndex > -1 && mCurrentEditChannelId > -1) {
+                ItemAdapter adapter = null;
+                if (TextUtils.equals(mCurrentEditChannelList, LIST_ALL_CHANNEL)) {
+                    adapter = (ItemAdapter)mAllListView.getAdapter();
+                } else if (TextUtils.equals(mCurrentEditChannelList, LIST_SORT_CONTENT)) {
+                    adapter = (ItemAdapter)mContentListView.getAdapter();
+                }
+                if (LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList) && adapter != null && adapter.getCount() > 0 && adapter.getCount() > mCurrentEditChannelIndex) {
+                    mFavListView.updateAllItem(this, mChannelDataManager.getChannelFavListItem((ChannelListItem)adapter.getItem(mCurrentEditChannelIndex)));
+                    //mFavListView.requestFocus();
+                    mFavListView.setSelection(0);
                 }
             }
         }
@@ -843,15 +887,39 @@ public class SortFavActivity extends Activity {
                 switch (sortKeyType) {
                     case ACTION_CHANNEL_SORT_AZ:
                         mContentListView.updateAllItem(this, mChannelDataManager.getAZSortChannelListItemByStartedAlphabet("", key));
+                        mContentListView.setSelection(0);
+                        if (mRightShowContainner.getVisibility() == View.VISIBLE && LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList)) {
+                            if (mContentListView.getVisibility() == View.VISIBLE && !mContentListView.hasFocus() && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                updateEditChannelInfo(mContentListView, R.id.sort_channel, mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                            }
+                        }
                         break;
                     case ACTION_CHANNEL_SORT_TP:
                         mContentListView.updateAllItem(this, mChannelDataManager.getTPSortChannelListItemByName("", key));
+                        mContentListView.setSelection(0);
+                        if (mRightShowContainner.getVisibility() == View.VISIBLE && LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList)) {
+                            if (mContentListView.getVisibility() == View.VISIBLE && !mContentListView.hasFocus() && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                updateEditChannelInfo(mContentListView, R.id.sort_channel, mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                            }
+                        }
                         break;
                     case ACTION_CHANNEL_SORT_NETWORKID:
                         mContentListView.updateAllItem(this, mChannelDataManager.getOperatorSortChannelListItemByNetworkId("", Integer.valueOf(key)));
+                        mContentListView.setSelection(0);
+                        if (mRightShowContainner.getVisibility() == View.VISIBLE && LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList)) {
+                            if (mContentListView.getVisibility() == View.VISIBLE && !mContentListView.hasFocus() && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                updateEditChannelInfo(mContentListView, R.id.sort_channel, mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                            }
+                        }
                         break;
                     case ACTION_FUNVTION_SATELLITE:
-                        mContentListView.updateAllItem(this, mChannelDataManager.getOperatorSortChannelListItemByNetworkId("", Integer.valueOf(key)));
+                        mContentListView.updateAllItem(this, mChannelDataManager.getSatelliteSortChannelListItemByName("", key));
+                        mContentListView.setSelection(0);
+                        if (mRightShowContainner.getVisibility() == View.VISIBLE && LIST_CHANNEL_FAV_LIST.equals(mCurrentFavlList)) {
+                            if (mContentListView.getVisibility() == View.VISIBLE && !mContentListView.hasFocus() && mContentListView.getAdapter() != null && mContentListView.getAdapter().getCount() > 0) {
+                                updateEditChannelInfo(mContentListView, R.id.sort_channel, mContentListView.getPositionForView(mContentListView.getSelectedView()));
+                            }
+                        }
                         break;
                     default:
                         break;
