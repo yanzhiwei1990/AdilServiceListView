@@ -42,7 +42,8 @@ public class ChannelDataManager {
     public static final String KEY_SETTINGS_CHANNEL_FAV_INDEX = "fav_index";
     public static final String KEY_SETTINGS_FAV_NAME = "fav_name";
     public static final String KEY_SETTINGS_FAV_INDEX = "original_index";
-    public static final String KEY_SETTINGS_IS_ALL_FAV_LIST = "is_all_fav_list";
+    //public static final String KEY_SETTINGS_IS_ALL_FAV_LIST = "is_all_fav_list";
+    public static final String KEY_SETTINGS_FAV_LIST_TYPE = "fav_list_type";
     public static final String KEY_SETTINGS_FAV_IS_ADDED = "is_added";
 
     public ChannelDataManager(Context context) {
@@ -631,7 +632,8 @@ public class ChannelDataManager {
                 childObj.put(KEY_SETTINGS_FAV_NAME, DEFAULTNAME + String.valueOf(i));
                 childObj.put(KEY_SETTINGS_FAV_INDEX, i);
                 childObj.put(KEY_SETTINGS_FAV_IS_ADDED, false);
-                childObj.put(KEY_SETTINGS_IS_ALL_FAV_LIST, true);
+                //childObj.put(KEY_SETTINGS_IS_ALL_FAV_LIST, true);
+                childObj.put(KEY_SETTINGS_FAV_LIST_TYPE, Item.LIST_ALL_FAV_LIST);
                 childObj.put(KEY_SETTINGS_CHANNEL_ITEM_TYPE, Item.ACTION_FUNVTION_FAVLIST);
                 childObj.put(KEY_SETTINGS_CHANNEL_CONTAINER_TYPE, Item.CONTAINER_ITEM_ALL_FAV);
                 array.put(childObj);
@@ -708,6 +710,42 @@ public class ChannelDataManager {
         return result;
     }
 
+    public LinkedList<Item> getEditFavListItem() {
+        LinkedList<Item> result = new LinkedList<Item>();
+        JSONArray initArray = null;
+        String jsonStr = getStringFromXml(KEY_SETTINGS_FAVLIST, null);
+        if (TextUtils.isEmpty(jsonStr)) {
+            initArray = init64FavList();
+            if (initArray != null && initArray.length() > 0) {
+                saveStringToXml(KEY_SETTINGS_FAVLIST, initArray.toString());
+            }
+        } else {
+            try {
+                initArray = new JSONArray(jsonStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (initArray != null && initArray.length() > 0) {
+            Log.d(TAG, "getFavListItem length = " + initArray.length());
+            Item item = null;
+            for (int i = 0; i < initArray.length(); i++) {
+                try {
+                    JSONObject obj = (JSONObject)initArray.get(i);
+                    obj.put(KEY_SETTINGS_FAV_IS_ADDED, true);
+                    obj.put(KEY_SETTINGS_FAV_LIST_TYPE, Item.LIST_EDIT_ALL_FAV_LIST);
+                    //Log.d(TAG, "getFavListItem jsonObj = " + obj.toString());
+                    item = new FavListItem(mContext, obj.getString(KEY_SETTINGS_FAV_NAME), true, obj.toString());
+                    result.add(item);
+                } catch (JSONException e) {
+                    Log.d(TAG, "getFavListItem JSONException = " + e);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
     private List<String> getFavList() {
         List<String> result = new ArrayList<String>();
         JSONArray array = null;
@@ -744,7 +782,8 @@ public class ChannelDataManager {
             for (int i = 0; i < initArray.length(); i++) {
                 try {
                     JSONObject obj = (JSONObject)initArray.get(i);
-                    obj.put(KEY_SETTINGS_IS_ALL_FAV_LIST, false);
+                    //obj.put(KEY_SETTINGS_IS_ALL_FAV_LIST, false);
+                    obj.put(KEY_SETTINGS_FAV_LIST_TYPE, Item.LIST_CHANNEL_FAV_LIST);
                     //Log.d(TAG, "getChannelFavListItem jsonObj = " + obj.toString());
                     boolean isFavSelected = false;
                     if (channelFav != null && channelFav.size() > 0) {
@@ -765,7 +804,40 @@ public class ChannelDataManager {
 
     public LinkedList<Item> getChannelItemByFavPage(int favId) {
         LinkedList<Item> result = new LinkedList<Item>();
+        LinkedList<Item> listItem = getChannelListItemWithoutIndex("");
+        if (listItem != null && listItem.size() > 0) {
+            Iterator<Item> iterator = listItem.iterator();
+            //SONObject obj = null;
+            //JSONArray array = null;
+            //String channelObjjsonSrt = null;
+            ChannelListItem oneItem = null;
+            boolean hasFav = false;
+            List<Integer> favInfoList = null;
+            int count = 1;
+            while (iterator.hasNext()) {
+                hasFav = false;
+                oneItem = (ChannelListItem)iterator.next();
+                favInfoList = oneItem.getFavAllIndex();
+                if (favInfoList != null && favInfoList.size() > 0) {
+                    for (int i = 0; i < favInfoList.size(); i++) {
+                        if (favId == (int)favInfoList.get(i)) {
+                            hasFav = true;
+                            oneItem = new ChannelListItem(mContext, count + "    " + oneItem.getTitle(), hasFav, oneItem.getJSONObject().toString());
+                            result.add(oneItem);
+                            count++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /*public LinkedList<Item> getChannelItemByFavPage(int favId) {
+        LinkedList<Item> result = new LinkedList<Item>();
         List<String> list = getChannelList("");
+        LinkedList<Item> listItem = getChannelListItemWithoutIndex("");
         if (list != null && list.size() > 0) {
             Iterator<String> iterator = list.iterator();
             JSONObject obj = null;
@@ -799,7 +871,7 @@ public class ChannelDataManager {
         }
 
         return result;
-    }
+    }*/
 
     public void updateFavListChangeToDatabase(String data) {
         saveStringToXml(KEY_SETTINGS_FAVLIST, data);

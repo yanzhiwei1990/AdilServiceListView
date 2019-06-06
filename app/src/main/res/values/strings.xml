@@ -20,4 +20,14 @@
     <string name="channel_list_all">ALL TV</string>
     <string name="channel_search">Search</string>
     <string name="channel_search_result">Search Result</string>
+    <string name="edit_fav_list">Edit Favlist</string>
+    <string name="edit_fav_list_add">ADD</string>
+    <string name="edit_fav_list_del">DELETE</string>
+    <string name="edit_fav_list_edit">EDIT</string>
+    <string name="edit_fav_list_ok">OK</string>
+    <string name="edit_fav_list_add_description">Add new fav page</string>
+    <string name="edit_fav_list_add_type_in_description">please type in name</string>
+    <string name="edit_fav_list_del_description">Delete fav page \"%1$2s\"</string>
+    <string name="edit_fav_list_edit_description">Edit fav page \"%1$2s\"</string>
+    <string name="edit_fav_list_name_invalid">please type in complete name !</string>
 </resources>

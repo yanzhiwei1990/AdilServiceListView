@@ -25,7 +25,11 @@ public abstract class Item {
     public static final int CONTAINER_ITEM_SORT_CONTENT = 1;
     public static final int CONTAINER_ITEM_SORT_KEY = 2;
     public static final int CONTAINER_ITEM_ALL_FAV = 3;
-    public static final int CONTAINER_ITEM_CHANNEL_FAV = 3;
+    public static final int CONTAINER_ITEM_CHANNEL_FAV = 4;
+
+    public static final String LIST_ALL_FAV_LIST = "all_fav_list";
+    public static final String LIST_CHANNEL_FAV_LIST = "all_channel_fav_list";
+    public static final String LIST_EDIT_ALL_FAV_LIST = "edit_fav_list";
 
     public Item(String name) {
         this.mItemName = name;

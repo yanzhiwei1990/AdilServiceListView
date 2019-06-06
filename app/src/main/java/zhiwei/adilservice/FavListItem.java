@@ -90,7 +90,7 @@ public class FavListItem extends Item {
 
     @Override
     protected Drawable getDrawable() {
-        return mContext.getDrawable(R.drawable.ic_star_white);
+        return mContext.getDrawable(R.drawable.edit_fav_icon);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class FavListItem extends Item {
             array.put(2);//first element represent total number of sub view
             obj = new JSONObject(addTextView(R.id.title_text, mName));
             array.put(obj);
-            obj = new JSONObject(addIconTextView(R.id.icon_text, R.drawable.ic_star_white));
+            obj = new JSONObject(addIconTextView(R.id.icon_text, R.drawable.edit_fav_icon));
             array.put(obj);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -126,11 +126,24 @@ public class FavListItem extends Item {
         return result;
     }
 
-    public boolean isAllFavList() {
+    /*public boolean isAllFavList() {
         boolean result = false;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
                 result = mJSONObject.getBoolean(ChannelDataManager.KEY_SETTINGS_IS_ALL_FAV_LIST);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "isAllFavList e = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }*/
+
+    public String getFavListType() {
+        String result = null;
+        try {
+            if (mJSONObject != null && mJSONObject.length() > 0) {
+                result = mJSONObject.getString(ChannelDataManager.KEY_SETTINGS_FAV_LIST_TYPE);
             }
         } catch (JSONException e) {
             Log.e(TAG, "isAllFavList e = " + e.getMessage());

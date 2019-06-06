@@ -26,6 +26,8 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -85,22 +87,45 @@ public class SortFavActivity extends Activity {
         init();
     }
 
+    private int mKeyDownCount = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //LOG(LOGD, null, "onKeyDown " + event);
+        LOG(LOGD, null, "onKeyDown " + event);
+        mKeyDownCount = event.getRepeatCount();
         if (KeyEvent.KEYCODE_BACK == keyCode) {
             /*if (mRightShowContainner.getVisibility() == View.VISIBLE) {
                 mRightShowContainner.setVisibility(View.GONE);
                 return true;
             }*/
         }
-        dealAction(getKeyEventAction(keyCode, event));
+        if (mKeyDownCount == 1) {//think it is long pressed
+            if (keyCode == KeyEvent.KEYCODE_F4) {
+                dealLongPressAction(getKeyEventAction(keyCode, event));
+            }
+
+        }
         return super.onKeyDown(keyCode, event);
     }
 
+    /*@Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        LOG(LOGD, null, "onKeyLongPress " + event);
+        if (keyCode == KeyEvent.KEYCODE_F4) {
+            dealLongPressAction(getKeyEventAction(keyCode, event));
+            return true;
+        }
+        return false;
+    }*/
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //LOG(LOGD, null, "onKeyUp " + event);
+        LOG(LOGD, null, "onKeyUp " + event);
+        if (mKeyDownCount > 0) {
+            mKeyDownCount = 0;
+            return true;
+        }
+        mKeyDownCount = 0;
         if (KeyEvent.KEYCODE_BACK == keyCode) {
             if (mRightShowContainner.getVisibility() == View.VISIBLE) {
                 mRightShowContainner.setVisibility(View.GONE);
@@ -117,6 +142,7 @@ public class SortFavActivity extends Activity {
                 return true;
             }
         }
+        dealAction(getKeyEventAction(keyCode, event));
         return super.onKeyUp(keyCode, event);
     }
 
@@ -272,6 +298,42 @@ public class SortFavActivity extends Activity {
                     }
                 }
                 dealActionUI(action);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void dealLongPressAction(int action) {
+        LOG(LOGD, null, "dealLongPressAction = " + action);
+        switch (action) {
+            case ACTION_FUNVTION_FAVLIST:
+                mRightTitle.setText(R.string.edit_fav_list);
+                /*if (mAllListView.getVisibility() == View.VISIBLE) {
+                    mAllListView.setVisibility(View.GONE);
+                }
+                if (mSortListView.getVisibility() == View.VISIBLE) {
+                    mSortListView.setVisibility(View.GONE);
+                }
+                if (mContentListView.getVisibility() == View.VISIBLE) {
+                    mContentListView.setVisibility(View.GONE);
+                }*/
+                if (mRightShowContainner.getVisibility() != View.VISIBLE) {
+                    mRightShowContainner.setVisibility(View.VISIBLE);
+                }
+                dealLongActionUI(action);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void dealLongActionUI(int action) {
+        switch (action) {
+            case ACTION_FUNVTION_FAVLIST:
+                mFavListView.updateAllItem(this, mChannelDataManager.getEditFavListItem());
+                mFavListView.requestFocus();
+                mFavListView.setSelection(0);
                 break;
             default:
                 break;
@@ -539,6 +601,7 @@ public class SortFavActivity extends Activity {
     private static final String LIST_SORT_CONTENT = "sort_content_list";
     private static final String LIST_ALL_FAV_LIST = "all_fav_list";
     private static final String LIST_CHANNEL_FAV_LIST = "all_channel_fav_list";
+    private static final String LIST_EDIT_ALL_FAV_LIST = "edit_fav_list";
     private String mCurrentEditChannelList =  LIST_ALL_CHANNEL;//content or all channel
     private long mCurrentEditChannelId =  -1;
     private int mCurrentEditChannelIndex =  -1;
@@ -575,12 +638,16 @@ public class SortFavActivity extends Activity {
                             }
                         }
                         if (item != null) {
-                            if (item.isAllFavList()) {
+                            if (LIST_ALL_FAV_LIST.equals(item.getFavListType())) {
                                 mCurrentFavlList = LIST_ALL_FAV_LIST;
                                 mCurrentFavId = item.getFavId();
                                 mCurrentFavIndex = position;
-                            } else {
+                            } else if (LIST_CHANNEL_FAV_LIST.equals(item.getFavListType())){
                                 mCurrentFavlList = LIST_CHANNEL_FAV_LIST;
+                                mCurrentFavId = item.getFavId();
+                                mCurrentFavIndex = position;
+                            } else if (LIST_EDIT_ALL_FAV_LIST.equals(item.getFavListType())) {
+                                mCurrentFavlList = LIST_EDIT_ALL_FAV_LIST;
                                 mCurrentFavId = item.getFavId();
                                 mCurrentFavIndex = position;
                             }
@@ -626,12 +693,16 @@ public class SortFavActivity extends Activity {
                             favItem = (FavListItem)(parent.getItemAtPosition(position));
                         }
                         if (favItem != null) {
-                            if (favItem.isAllFavList()) {
+                            if (LIST_ALL_FAV_LIST.equals(favItem.getFavListType())) {
                                 mCurrentFavlList = LIST_ALL_FAV_LIST;
                                 mCurrentFavId = favItem.getFavId();
                                 mCurrentFavIndex = position;
-                            } else {
+                            } else if (LIST_CHANNEL_FAV_LIST.equals(favItem.getFavListType())){
                                 mCurrentFavlList = LIST_CHANNEL_FAV_LIST;
+                                mCurrentFavId = favItem.getFavId();
+                                mCurrentFavIndex = position;
+                            } else if (LIST_EDIT_ALL_FAV_LIST.equals(favItem.getFavListType())) {
+                                mCurrentFavlList = LIST_EDIT_ALL_FAV_LIST;
                                 mCurrentFavId = favItem.getFavId();
                                 mCurrentFavIndex = position;
                             }
@@ -847,17 +918,30 @@ public class SortFavActivity extends Activity {
         if (parent != null && parent instanceof FavListListView) {
             FavListItem favItem = null;
             ItemAdapter favAdapter = null;
-            boolean isAllFav = true;
+            String favType = null;
             boolean isSelectedFav = false;
             int favId = -1;
             favItem = (FavListItem)parent.getItemAtPosition(position);
             LinkedList<Item> data =  ((ItemAdapter)parent.getAdapter()).getAllData();
             if (favItem != null) {
-                isAllFav = favItem.isAllFavList();
+                favType = favItem.getFavListType();
                 favId = favItem.getFavId();
                 isSelectedFav = favItem.isNeedShowIcon();
-                LOG(LOGD, null, "updateChannelFavInfo isAllFav = " + isAllFav + ", favId = " + favId + ", isSelectedFav = " + isSelectedFav);
-                if (!isAllFav) {
+                LOG(LOGD, null, "updateChannelFavInfo favType = " + favType + ", favId = " + favId + ", isSelectedFav = " + isSelectedFav);
+                if (LIST_ALL_FAV_LIST.equals(favItem.getFavListType())) {
+                    mCurrentFavlList = LIST_ALL_FAV_LIST;
+                    mCurrentFavId = favItem.getFavId();
+                    mCurrentFavIndex = position;
+                } else if (LIST_CHANNEL_FAV_LIST.equals(favItem.getFavListType())){
+                    mCurrentFavlList = LIST_CHANNEL_FAV_LIST;
+                    mCurrentFavId = favItem.getFavId();
+                    mCurrentFavIndex = position;
+                } else if (LIST_EDIT_ALL_FAV_LIST.equals(favItem.getFavListType())) {
+                    mCurrentFavlList = LIST_EDIT_ALL_FAV_LIST;
+                    mCurrentFavId = favItem.getFavId();
+                    mCurrentFavIndex = position;
+                }
+                if (LIST_CHANNEL_FAV_LIST.equals(favType)) {
                     isSelectedFav = !isSelectedFav;
                     favItem.setNeedShowIcon(isSelectedFav);
                     mFavListView.updateItem(position, favItem);
@@ -877,7 +961,7 @@ public class SortFavActivity extends Activity {
                         String updateChannel = mChannelDataManager.genarateUpdatedChannelListJsonSrt(mChannelDataManager.getChannelList(""), channelItem.getChannelId(), channelItem.getFavArrayJsonStr());
                         mChannelDataManager.updateChannelListChangeToDatabase(updateChannel);
                     }
-                } else {
+                } else if (LIST_ALL_FAV_LIST.equals(favType)) {
                     if (mSortListView.getVisibility() == View.VISIBLE) {
                         mSortListView.setVisibility(View.GONE);
                     }
@@ -885,10 +969,12 @@ public class SortFavActivity extends Activity {
                         mContentListView.setVisibility(View.GONE);
                     }
                     if (mAllListView.getVisibility() != View.VISIBLE) {
-                        mContentListView.setVisibility(View.VISIBLE);
+                        mAllListView.setVisibility(View.VISIBLE);
                     }
                     mLeftTitle.setText(favItem.getTitle());
                     mAllListView.updateAllItem(this, mChannelDataManager.getChannelItemByFavPage(favItem.getFavId()));
+                } else if (LIST_EDIT_ALL_FAV_LIST.equals(favType)) {
+                    mCustomedDialogView.creatEditFavDialog(favItem).show();
                 }
             }
         }
