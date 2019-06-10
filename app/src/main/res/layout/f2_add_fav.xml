@@ -16,7 +16,7 @@
         android:text="@string/f2_key"
         android:textSize="@dimen/rectangle_text_size" />
 
-    <zhiwei.adilservice.MarqueeButton
+    <droidlogic.favlistsettings.MarqueeButton
         android:id="@+id/f2_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

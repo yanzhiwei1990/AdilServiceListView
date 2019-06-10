@@ -18,7 +18,7 @@
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold" />
 
-    <zhiwei.adilservice.MarqueeButton
+    <droidlogic.favlistsettings.MarqueeButton
         android:id="@+id/sort_sort_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

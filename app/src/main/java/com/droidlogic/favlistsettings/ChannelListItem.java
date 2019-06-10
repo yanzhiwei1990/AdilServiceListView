@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,7 +8,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -270,7 +269,7 @@ public class ChannelListItem extends Item {
     }
 
     public int getItemType() {
-        int result = Item.ACTION_CHANNEL_SORT_ALL;
+        int result = ACTION_CHANNEL_SORT_ALL;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
                 result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE);
@@ -294,7 +293,7 @@ public class ChannelListItem extends Item {
     }
 
     public int getContainerType() {
-        int result = Item.CONTAINER_ITEM_ALL_CHANNEL;
+        int result = CONTAINER_ITEM_ALL_CHANNEL;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
                 result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE);

@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -164,7 +164,7 @@ public class FavListItem extends Item {
     }
 
     public int getItemType() {
-        int result = Item.ACTION_CHANNEL_SORT_ALL;
+        int result = ACTION_CHANNEL_SORT_ALL;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
                 result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_ITEM_TYPE);
@@ -188,7 +188,7 @@ public class FavListItem extends Item {
     }
 
     public int getContainerType() {
-        int result = Item.CONTAINER_ITEM_ALL_CHANNEL;
+        int result = CONTAINER_ITEM_ALL_CHANNEL;
         try {
             if (mJSONObject != null && mJSONObject.length() > 0) {
                 result = mJSONObject.getInt(ChannelDataManager.KEY_SETTINGS_CHANNEL_CONTAINER_TYPE);

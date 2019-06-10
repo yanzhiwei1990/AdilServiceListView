@@ -7,12 +7,11 @@
  * Description: JAVA file
  */
 
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class MarqueeButton extends Button {
 

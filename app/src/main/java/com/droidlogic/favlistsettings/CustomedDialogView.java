@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.app.AlertDialog;
 import android.content.Context;

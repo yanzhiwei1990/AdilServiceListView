@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;

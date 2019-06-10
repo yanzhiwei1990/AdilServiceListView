@@ -1,5 +1,5 @@
 // IInterationCallback.aidl
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 //import java.util.Map;
 // Declare any non-default types here with import statements

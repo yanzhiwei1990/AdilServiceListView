@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.app.Activity;
 import android.app.Service;
@@ -10,26 +10,19 @@ import android.os.IBinder;
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.view.Window;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.Collections;
 import java.util.LinkedList;
+
+import com.droidlogic.favlistsettings.IInterationCallback;
+import com.droidlogic.favlistsettings.IInterationService;
 
 
 public class SortFavActivity extends Activity {
@@ -1148,14 +1141,14 @@ public class SortFavActivity extends Activity {
         LOG(LOGD, null, "startInterationService");
         Intent intent = new Intent("droidlogic.intent.action.InterationService");
         //intent.setClassName("com.droidlogic.droidlivetv", "com.droidlogic.droidlivetv.interationservice.InterationService");
-        intent.setClassName("zhiwei.adilservice", "zhiwei.adilservice.InterationService");
+        intent.setClassName("zhiwei.adilservice", "InterationService");
         startService(intent);
     }
 
     private void stopInterationService() {
         LOG(LOGD, null, "stopInterationService");
         Intent intent = new Intent("droidlogic.intent.action.InterationService");
-        intent.setClassName("zhiwei.adilservice", "zhiwei.adilservice.InterationService");
+        intent.setClassName("zhiwei.adilservice", "InterationService");
         stopService(intent);
     }
 
@@ -1164,7 +1157,7 @@ public class SortFavActivity extends Activity {
             LOG(LOGD, null, "bindInterationService");
             mStartedBound = true;
             Intent intent = new Intent("droidlogic.intent.action.InterationService");
-            intent.setClassName("zhiwei.adilservice", "zhiwei.adilservice.InterationService");
+            intent.setClassName("zhiwei.adilservice", "InterationService");
             bindService(intent, mInterationServiceConnection, Service.BIND_AUTO_CREATE);
         } else {
             LOG(LOGD, null, "bindInterationService has started");

@@ -1,9 +1,8 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class ChannelDataManager {
     private static final String TAG = "ChannelDataManager";

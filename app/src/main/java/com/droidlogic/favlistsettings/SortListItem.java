@@ -1,13 +1,11 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class SortListItem extends Item {
     private static final String TAG = "SortListItem";

@@ -7,7 +7,7 @@
  * Description: JAVA file
  */
 
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.content.Context;
 import android.util.AttributeSet;

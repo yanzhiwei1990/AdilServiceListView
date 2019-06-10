@@ -14,7 +14,7 @@
         android:background="@drawable/circle_yellow"
         android:gravity="center" />
 
-    <zhiwei.adilservice.MarqueeButton
+    <droidlogic.favlistsettings.MarqueeButton
         android:id="@+id/yellow_sort_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

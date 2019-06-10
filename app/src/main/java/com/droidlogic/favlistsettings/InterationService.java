@@ -1,4 +1,4 @@
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -10,6 +10,9 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import java.util.Map;
+
+import com.droidlogic.favlistsettings.IInterationCallback;
+import com.droidlogic.favlistsettings.IInterationService;
 
 public class InterationService extends Service {
     private static final String TAG = "InterationService";

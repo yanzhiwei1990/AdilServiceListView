@@ -1,7 +1,7 @@
 // IInterationService.aidl
-package zhiwei.adilservice;
+package com.droidlogic.favlistsettings;
 
-import zhiwei.adilservice.IInterationCallback;
+import com.droidlogic.favlistsettings.IInterationCallback;
 
 // Declare any non-default types here with import statements
 interface IInterationService {
